@@ -1,0 +1,115 @@
+[1mdiff --git a/src/com/litepaltest/model/Classroom.java b/src/com/litepaltest/model/Classroom.java[m
+[1mindex ea761e4..90952bd 100644[m
+[1m--- a/src/com/litepaltest/model/Classroom.java[m
+[1m+++ b/src/com/litepaltest/model/Classroom.java[m
+[36m@@ -1,5 +1,6 @@[m
+ package com.litepaltest.model;[m
+ [m
+[32m+[m[32mimport java.util.HashSet;[m[41m[m
+ import java.util.List;[m
+ import java.util.Set;[m
+ [m
+[36m@@ -11,7 +12,7 @@[m [mpublic class Classroom extends DataSupport {[m
+ [m
+ 	private String name;[m
+ [m
+[31m-	private Set<Student> studentCollection;[m
+[32m+[m	[32mprivate Set<Student> studentCollection = new HashSet<Student>();;[m[41m[m
+ [m
+ 	/**[m
+ 	 * @return the _id[m
+[1mdiff --git a/src/com/litepaltest/test/SaveTestCase.java b/src/com/litepaltest/test/SaveTestCase.java[m
+[1mindex 94ed3b0..771556c 100644[m
+[1m--- a/src/com/litepaltest/test/SaveTestCase.java[m
+[1m+++ b/src/com/litepaltest/test/SaveTestCase.java[m
+[36m@@ -14,6 +14,7 @@[m [mimport android.test.AndroidTestCase;[m
+ import com.litepaltest.model.Classroom;[m
+ import com.litepaltest.model.IdCard;[m
+ import com.litepaltest.model.Student;[m
+[32m+[m[32mimport com.litepaltest.model.Teacher;[m[41m[m
+ [m
+ public class SaveTestCase extends AndroidTestCase {[m
+ [m
+[36m@@ -49,38 +50,52 @@[m [mpublic class SaveTestCase extends AndroidTestCase {[m
+ 		Assert.assertTrue(isDataExists("Idcard", idcard1.getId()));[m
+ 		Assert.assertTrue(isDataExists("Student", tom.getId()));[m
+ 	}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void testMany2One() {[m[41m[m
+[32m+[m		[32mClassroom c = new Classroom();[m[41m[m
+[32m+[m		[32mc.setName("Music room");[m[41m[m
+[32m+[m		[32mStudent lily = new Student();[m[41m[m
+[32m+[m		[32mlily.setName("Lily");[m[41m[m
+[32m+[m		[32mlily.setAge(13);[m[41m[m
+[32m+[m		[32mlily.setClassroom(c);[m[41m[m
+[32m+[m		[32mStudent lucy = new Student();[m[41m[m
+[32m+[m		[32mlucy.setName("Lucy");[m[41m[m
+[32m+[m		[32mlucy.setAge(13);[m[41m[m
+[32m+[m		[32mlucy.setClassroom(c);[m[41m[m
+[32m+[m		[32mlily.save();[m[41m[m
+[32m+[m	[32m}[m[41m[m
+ [m
+ 	public void testMany2Many() {[m
+[31m-		// Student danny = new Student();[m
+[31m-		// danny.setName("Danny");[m
+[31m-		// danny.setAge(14);[m
+[31m-		// Student mick = new Student();[m
+[31m-		// mick.setName("Mick");[m
+[31m-		// mick.setAge(13);[m
+[31m-		// Teacher cam = new Teacher();[m
+[31m-		// cam.setTeacherName("Cam");[m
+[31m-		// cam.setAge(33);[m
+[31m-		// cam.setSex(true);[m
+[31m-		// cam.setTeachYears(5);[m
+[31m-		// Teacher jack = new Teacher();[m
+[31m-		// jack.setTeacherName("Jack");[m
+[31m-		// jack.setAge(36);[m
+[31m-		// jack.setSex(false);[m
+[31m-		// jack.setTeachYears(11);[m
+[31m-		//[m
+[31m-		// danny.getTeachers().add(jack);[m
+[31m-		// danny.getTeachers().add(cam);[m
+[31m-		//[m
+[31m-		// mick.getTeachers().add(jack);[m
+[31m-		// mick.getTeachers().add(cam);[m
+[31m-		//[m
+[31m-		// cam.getStudents().add(danny);[m
+[31m-		// cam.getStudents().add(mick);[m
+[31m-		//[m
+[31m-		// jack.getStudents().add(danny);[m
+[31m-		// jack.getStudents().add(mick);[m
+[31m-		//[m
+[31m-		// danny.save();[m
+[32m+[m		[32m Student danny = new Student();[m[41m[m
+[32m+[m		[32m danny.setName("Danny");[m[41m[m
+[32m+[m		[32m danny.setAge(14);[m[41m[m
+[32m+[m		[32m Student mick = new Student();[m[41m[m
+[32m+[m		[32m mick.setName("Mick");[m[41m[m
+[32m+[m		[32m mick.setAge(13);[m[41m[m
+[32m+[m		[32m Teacher cam = new Teacher();[m[41m[m
+[32m+[m		[32m cam.setTeacherName("Cam");[m[41m[m
+[32m+[m		[32m cam.setAge(33);[m[41m[m
+[32m+[m		[32m cam.setSex(true);[m[41m[m
+[32m+[m		[32m cam.setTeachYears(5);[m[41m[m
+[32m+[m		[32m Teacher jack = new Teacher();[m[41m[m
+[32m+[m		[32m jack.setTeacherName("Jack");[m[41m[m
+[32m+[m		[32m jack.setAge(36);[m[41m[m
+[32m+[m		[32m jack.setSex(false);[m[41m[m
+[32m+[m		[32m jack.setTeachYears(11);[m[41m[m
+[32m+[m[41m		[m
+[32m+[m		[32m danny.getTeachers().add(jack);[m[41m[m
+[32m+[m		[32m danny.getTeachers().add(cam);[m[41m[m
+[32m+[m[41m		[m
+[32m+[m		[32m mick.getTeachers().add(jack);[m[41m[m
+[32m+[m		[32m mick.getTeachers().add(cam);[m[41m[m
+[32m+[m[41m		[m
+[32m+[m		[32m cam.getStudents().add(danny);[m[41m[m
+[32m+[m		[32m cam.getStudents().add(mick);[m[41m[m
+[32m+[m[41m		[m
+[32m+[m		[32m jack.getStudents().add(danny);[m[41m[m
+[32m+[m		[32m jack.getStudents().add(mick);[m[41m[m
+[32m+[m[41m		[m
+[32m+[m		[32m danny.save();[m[41m[m
+ 	}[m
+ [m
+ 	public void testCascadingSaving() {[m
