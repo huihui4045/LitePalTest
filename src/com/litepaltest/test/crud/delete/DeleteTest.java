@@ -3,6 +3,8 @@ package com.litepaltest.test.crud.delete;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.litepal.crud.DataSupport;
+
 import com.litepaltest.model.Classroom;
 import com.litepaltest.model.IdCard;
 import com.litepaltest.model.Student;
@@ -85,6 +87,15 @@ public class DeleteTest extends LitePalTestCase {
 		Student s = getStudent(jude.getId());
 		assertNull(s);
 	}
+	
+	public void testDeleteById() {
+		initJude();
+		jude.save();
+		int rowsAffected = DataSupport.delete(Student.class, jude.getId());
+		assertEquals(1, rowsAffected);
+		Student s = getStudent(jude.getId());
+		assertNull(s);
+	}
 
 	public void testDeleteNoSavedModelWithNoParameter() {
 		Student tony = new Student();
@@ -93,7 +104,12 @@ public class DeleteTest extends LitePalTestCase {
 		int rowsAffected = tony.delete();
 		assertEquals(0, rowsAffected);
 	}
-
+	
+	public void testDeleteWithNotExistsRecordById() {
+		int rowsAffected = DataSupport.delete(Student.class, 998909);
+		assertEquals(0, rowsAffected);
+	}
+	
 	public void testDeleteCascadeM2OAssociationsOnMSideWithNoParameter() {
 		createClassroomStudentsTeachers();
 		int rowsAffected = gameRoom.delete();
