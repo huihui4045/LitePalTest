@@ -87,7 +87,7 @@ public class DeleteTest extends LitePalTestCase {
 		Student s = getStudent(jude.getId());
 		assertNull(s);
 	}
-	
+
 	public void testDeleteById() {
 		initJude();
 		jude.save();
@@ -104,15 +104,26 @@ public class DeleteTest extends LitePalTestCase {
 		int rowsAffected = tony.delete();
 		assertEquals(0, rowsAffected);
 	}
-	
+
 	public void testDeleteWithNotExistsRecordById() {
 		int rowsAffected = DataSupport.delete(Student.class, 998909);
 		assertEquals(0, rowsAffected);
 	}
-	
+
 	public void testDeleteCascadeM2OAssociationsOnMSideWithNoParameter() {
 		createClassroomStudentsTeachers();
 		int rowsAffected = gameRoom.delete();
+		assertEquals(5, rowsAffected);
+		assertNull(getClassroom(gameRoom.get_id()));
+		assertNull(getStudent(jude.getId()));
+		assertNull(getStudent(rose.getId()));
+		assertNull(getTeacher(john.getId()));
+		assertNull(getTeacher(mike.getId()));
+	}
+
+	public void testDeleteCascadeM2OAssociationsOnMSideById() {
+		createClassroomStudentsTeachers();
+		int rowsAffected = DataSupport.delete(Classroom.class, gameRoom.get_id());
 		assertEquals(5, rowsAffected);
 		assertNull(getClassroom(gameRoom.get_id()));
 		assertNull(getStudent(jude.getId()));
@@ -136,6 +147,23 @@ public class DeleteTest extends LitePalTestCase {
 		assertEquals(1, rowsAffected);
 		assertNull(getTeacher(mike.getId()));
 	}
+	
+	public void testDeleteCascadeM2OAssociationsOnOSideById() {
+		createClassroomStudentsTeachers();
+		int rowsAffected = DataSupport.delete(Student.class, jude.getId());
+		assertEquals(1, rowsAffected);
+		assertNull(getStudent(jude.getId()));
+		rowsAffected = DataSupport.delete(Student.class, rose.getId());
+		assertEquals(1, rowsAffected);
+		assertNull(getStudent(rose.getId()));
+		rowsAffected = DataSupport.delete(Teacher.class, john.getId());
+		assertEquals(1, rowsAffected);
+		assertNull(getTeacher(john.getId()));
+		rowsAffected = DataSupport.delete(Teacher.class, mike.getId());
+		assertEquals(1, rowsAffected);
+		assertNull(getTeacher(mike.getId()));
+		
+	}
 
 	public void testDeleteCascadeO2OAssociationsWithNoParameter() {
 		createStudentsTeachersWithIdCard();
@@ -152,6 +180,25 @@ public class DeleteTest extends LitePalTestCase {
 		assertNull(getTeacher(john.getId()));
 		assertNull(getIdCard(johnCard.getId()));
 		affectedRows = mikeCard.delete();
+		assertEquals(1, affectedRows);
+		assertNull(getIdCard(mikeCard.getId()));
+	}
+	
+	public void testDeleteCascadeO2OAssociationsById() {
+		createStudentsTeachersWithIdCard();
+		int affectedRows = DataSupport.delete(Student.class, jude.getId());
+		assertEquals(2, affectedRows);
+		assertNull(getStudent(jude.getId()));
+		assertNull(getIdCard(judeCard.getId()));
+		affectedRows = DataSupport.delete(IdCard.class, roseCard.getId());
+		assertEquals(2, affectedRows);
+		assertNull(getStudent(rose.getId()));
+		assertNull(getIdCard(roseCard.getId()));
+		affectedRows = DataSupport.delete(Teacher.class, john.getId());
+		assertEquals(2, affectedRows);
+		assertNull(getTeacher(john.getId()));
+		assertNull(getIdCard(johnCard.getId()));
+		affectedRows = DataSupport.delete(IdCard.class, mikeCard.getId());
 		assertEquals(1, affectedRows);
 		assertNull(getIdCard(mikeCard.getId()));
 	}
@@ -172,7 +219,7 @@ public class DeleteTest extends LitePalTestCase {
 		assertM2MFalse("student", "teacher", rose.getId(), john.getId());
 		assertM2M("student", "teacher", jude.getId(), mike.getId());
 	}
-
+	
 	private void initGameRoom() {
 		gameRoom = new Classroom();
 		gameRoom.setName("Game room");
