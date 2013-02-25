@@ -64,5 +64,7 @@
     	
 		Note this mark is optional for developers.
      -->
+     	
+     	<cases value="lower" ></cases>
 
 </litepal>

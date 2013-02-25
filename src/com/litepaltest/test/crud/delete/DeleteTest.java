@@ -147,7 +147,7 @@ public class DeleteTest extends LitePalTestCase {
 		assertEquals(1, rowsAffected);
 		assertNull(getTeacher(mike.getId()));
 	}
-	
+
 	public void testDeleteCascadeM2OAssociationsOnOSideById() {
 		createClassroomStudentsTeachers();
 		int rowsAffected = DataSupport.delete(Student.class, jude.getId());
@@ -162,7 +162,7 @@ public class DeleteTest extends LitePalTestCase {
 		rowsAffected = DataSupport.delete(Teacher.class, mike.getId());
 		assertEquals(1, rowsAffected);
 		assertNull(getTeacher(mike.getId()));
-		
+
 	}
 
 	public void testDeleteCascadeO2OAssociationsWithNoParameter() {
@@ -183,7 +183,7 @@ public class DeleteTest extends LitePalTestCase {
 		assertEquals(1, affectedRows);
 		assertNull(getIdCard(mikeCard.getId()));
 	}
-	
+
 	public void testDeleteCascadeO2OAssociationsById() {
 		createStudentsTeachersWithIdCard();
 		int affectedRows = DataSupport.delete(Student.class, jude.getId());
@@ -219,7 +219,24 @@ public class DeleteTest extends LitePalTestCase {
 		assertM2MFalse("student", "teacher", rose.getId(), john.getId());
 		assertM2M("student", "teacher", jude.getId(), mike.getId());
 	}
-	
+
+	public void testDeleteCascadeM2MAssociationsById() {
+		createStudentsTeachersWithAssociations();
+		int rowsAffected = DataSupport.delete(Teacher.class, john.getId());
+		assertEquals(2, rowsAffected);
+		assertNull(getTeacher(john.getId()));
+		assertM2MFalse("student", "teacher", rose.getId(), john.getId());
+		assertM2M("student", "teacher", rose.getId(), mike.getId());
+		assertM2M("student", "teacher", jude.getId(), mike.getId());
+		createStudentsTeachersWithAssociations();
+		rowsAffected = DataSupport.delete(Teacher.class, mike.getId());
+		assertEquals(3, rowsAffected);
+		assertNull(getTeacher(mike.getId()));
+		assertM2MFalse("student", "teacher", rose.getId(), mike.getId());
+		assertM2MFalse("student", "teacher", jude.getId(), mike.getId());
+		assertM2M("student", "teacher", rose.getId(), john.getId());
+	}
+
 	private void initGameRoom() {
 		gameRoom = new Classroom();
 		gameRoom.setName("Game room");
