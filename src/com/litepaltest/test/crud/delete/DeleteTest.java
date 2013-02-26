@@ -277,6 +277,9 @@ public class DeleteTest extends LitePalTestCase {
 		rowsCount = getRowsCount("student");
 		affectedRows = DataSupport.deleteAll(Student.class, new String[] { "    " });
 		assertEquals(rowsCount, affectedRows);
+		rowsCount = getRowsCount("student_teacher");
+		affectedRows = DataSupport.deleteAll("student_teacher", null);
+		assertEquals(rowsCount, affectedRows);
 	}
 
 	public void testDeleteAllWithWrongConditions() {
