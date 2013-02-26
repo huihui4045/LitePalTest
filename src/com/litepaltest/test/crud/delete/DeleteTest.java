@@ -4,6 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.exceptions.DataSupportException;
+
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteException;
 
 import com.litepaltest.model.Classroom;
 import com.litepaltest.model.IdCard;
@@ -235,6 +239,68 @@ public class DeleteTest extends LitePalTestCase {
 		assertM2MFalse("student", "teacher", rose.getId(), mike.getId());
 		assertM2MFalse("student", "teacher", jude.getId(), mike.getId());
 		assertM2M("student", "teacher", rose.getId(), john.getId());
+	}
+
+	public void testDeleteAll() {
+		Student s;
+		int[] ids = new int[5];
+		for (int i = 0; i < 5; i++) {
+			s = new Student();
+			s.setName("Dusting");
+			s.setAge(i + 10);
+			s.save();
+			ids[i] = s.getId();
+		}
+		int affectedRows = DataSupport.deleteAll(Student.class, new String[] {
+				"name = ? and age = ?", "Dusting", "13" });
+		assertEquals(1, affectedRows);
+		assertNull(getStudent(ids[3]));
+		affectedRows = DataSupport.deleteAll(Student.class, new String[] { "name = 'Dusting'" });
+		assertEquals(4, affectedRows);
+	}
+
+	public void testDeleteAllRows() {
+		createStudentsTeachersWithIdCard();
+		int rowsCount = getRowsCount("teacher");
+		int affectedRows = 0;
+		affectedRows = DataSupport.deleteAll(Teacher.class, null);
+		assertEquals(rowsCount, affectedRows);
+		rowsCount = getRowsCount("student");
+		affectedRows = DataSupport.deleteAll(Student.class, new String[] {});
+		assertEquals(rowsCount, affectedRows);
+		rowsCount = getRowsCount("idcard");
+		affectedRows = DataSupport.deleteAll(IdCard.class, new String[] { null });
+		assertEquals(rowsCount, affectedRows);
+		createStudentsTeachersWithAssociations();
+		rowsCount = getRowsCount("teacher");
+		affectedRows = DataSupport.deleteAll(Teacher.class, new String[] { "" });
+		assertEquals(rowsCount, affectedRows);
+		rowsCount = getRowsCount("student");
+		affectedRows = DataSupport.deleteAll(Student.class, new String[] { "    " });
+		assertEquals(rowsCount, affectedRows);
+	}
+
+	public void testDeleteAllWithWrongConditions() {
+		try {
+			DataSupport.deleteAll(Student.class, new String[] { "name = 'Dustin'", "aaa" });
+			fail();
+		} catch (DataSupportException e) {
+			assertEquals("The parameters in conditions are incorrect.", e.getMessage());
+		}
+		try {
+			DataSupport.deleteAll(Student.class, new String[] { null, null });
+			fail();
+		} catch (DataSupportException e) {
+			assertEquals("The parameters in conditions are incorrect.", e.getMessage());
+		}
+		try {
+			DataSupport.deleteAll(Student.class, new String[] { "address = ?", "HK" });
+			fail();
+		} catch (SQLiteException e) {
+			assertEquals(
+					"no such column: address: , while compiling: DELETE FROM student WHERE address = ?",
+					e.getMessage());
+		}
 	}
 
 	private void initGameRoom() {

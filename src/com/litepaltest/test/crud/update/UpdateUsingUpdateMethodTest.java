@@ -8,6 +8,7 @@ import org.litepal.tablemanager.Connector;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 
 import com.litepaltest.model.Classroom;
 import com.litepaltest.model.Computer;
@@ -65,7 +66,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		values.put("TEACHERNAME", "Toy");
 		try {
 			DataSupport.update(Object.class, teacher.getId(), values);
-		} catch (DataSupportException e) {
+		} catch (SQLiteException e) {
 			assertEquals(
 					"no such table: object: , while compiling: UPDATE object SET TEACHERNAME=? WHERE id = "
 							+ teacher.getId(), e.getMessage());
@@ -78,7 +79,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		try {
 			DataSupport.update(Teacher.class, teacher.getId(), values);
 			fail("no such column: TEACHERYEARS");
-		} catch (DataSupportException e) {
+		} catch (SQLiteException e) {
 			assertEquals(
 					"no such column: TEACHERYEARS: , while compiling: UPDATE teacher SET TEACHERYEARS=? WHERE id = "
 							+ teacher.getId(), e.getMessage());
@@ -213,9 +214,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 	}
 
 	public void testUpdateAllRowsWithStaticUpdate() {
-		Cursor c = Connector.getDatabase().query("Student", null, null, null, null, null, null);
-		int allRows = c.getCount();
-		c.close();
+		int allRows = getRowsCount("student");
 		ContentValues values = new ContentValues();
 		values.put("name", "Zuckerburg");
 		int affectedRows = DataSupport.updateAll(Student.class, null, values);
@@ -248,7 +247,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		try {
 			DataSupport.updateAll(Student.class, new String[] { "address = ?", "HK" }, values);
 			fail();
-		} catch (DataSupportException e) {
+		} catch (SQLiteException e) {
 			assertEquals(
 					"no such column: address: , while compiling: UPDATE student SET name=? WHERE address = ?",
 					e.getMessage());
@@ -394,7 +393,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		try {
 			student.updateAll(new String[] { "address = ?", "HK" });
 			fail();
-		} catch (DataSupportException e) {
+		} catch (SQLiteException e) {
 			assertEquals(
 					"no such column: address: , while compiling: UPDATE student SET name=? WHERE address = ?",
 					e.getMessage());

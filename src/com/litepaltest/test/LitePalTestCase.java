@@ -105,6 +105,14 @@ public class LitePalTestCase extends AndroidTestCase {
 	protected String getTableName(Object object) {
 		return object.getClass().getSimpleName();
 	}
+	
+	protected int getRowsCount(String tableName) {
+		int count = 0;
+		Cursor c = Connector.getDatabase().query(tableName, null, null, null, null, null, null);
+		count = c.getCount();
+		c.close();
+		return count;
+	}
 
 	protected Classroom getClassroom(long id) {
 		Classroom c = null;
