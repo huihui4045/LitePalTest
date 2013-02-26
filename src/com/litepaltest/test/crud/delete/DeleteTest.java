@@ -6,7 +6,6 @@ import java.util.Set;
 import org.litepal.crud.DataSupport;
 import org.litepal.exceptions.DataSupportException;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteException;
 
 import com.litepaltest.model.Classroom;
