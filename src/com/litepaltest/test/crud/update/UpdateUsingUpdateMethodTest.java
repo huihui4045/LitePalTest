@@ -20,9 +20,23 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 
 	private Teacher teacher;
 
+	private Teacher t1;
+
+	private Teacher t2;
+
 	private Student student;
 
+	private Student s1;
+
+	private Student s2;
+
+	private Student s3;
+
 	private Classroom classroom;
+
+	private Classroom c1;
+
+	private Classroom c2;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -46,6 +60,30 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		student.save();
 		teacher.save();
 		classroom.save();
+	}
+
+	private void initForAssociations() {
+		c1 = new Classroom();
+		c1.setName("Working room");
+		c2 = new Classroom();
+		c2.setName("Resting room");
+		s1 = new Student();
+		s1.setName("Parker");
+		s1.setAge(18);
+		s2 = new Student();
+		s2.setName("Peter");
+		s2.setAge(19);
+		s3 = new Student();
+		s3.setName("Miley");
+		s3.setAge(16);
+		t1 = new Teacher();
+		t1.setTeacherName("Jackson");
+		t1.setTeachYears(3);
+		t1.setAge(28);
+		t2 = new Teacher();
+		t2.setTeacherName("Rose");
+		t2.setTeachYears(12);
+		t2.setAge(34);
 	}
 
 	public void testUpdateWithStaticUpdate() {
@@ -185,6 +223,63 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		assertEquals(0, rowsAffected);
 	}
 
+	public void testUpdateM2OAssociationsOnMSideWithInstanceUpdate() {
+		initForAssociations();
+		s1.setClassroom(c1);
+		s2.setClassroom(c1);
+		assertTrue(c1.save());
+		assertTrue(c2.save());
+		assertTrue(s1.save());
+		assertTrue(s2.save());
+		Student st = new Student();
+		st.setClassroom(c2);
+		int rowsAffected = st.update(s1.getId());
+		assertEquals(1, rowsAffected);
+		rowsAffected = st.update(s2.getId());
+		assertEquals(1, rowsAffected);
+		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
+		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
+	}
+	
+	public void testUpdateM2OAssociationsAndOtherFieldsOnMSideWithInstanceUpdate() {
+		initForAssociations();
+		s1.setClassroom(c1);
+		s2.setClassroom(c1);
+		assertTrue(c1.save());
+		assertTrue(c2.save());
+		assertTrue(s1.save());
+		assertTrue(s2.save());
+		Student st = new Student();
+		st.setName("Jackson");
+		st.setClassroom(c2);
+		int rowsAffected = st.update(s1.getId());
+		assertEquals(1, rowsAffected);
+		rowsAffected = st.update(s2.getId());
+		assertEquals(1, rowsAffected);
+		assertEquals("Jackson", getStudent(s1.getId()).getName());
+		assertEquals("Jackson", getStudent(s2.getId()).getName());
+		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
+		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
+	}
+
+
+	public void testUpdateM2OAssociationsOnOSideWithInstanceUpdate() {
+		initForAssociations();
+		c1.getStudentCollection().add(s1);
+		c1.getStudentCollection().add(s2);
+		assertTrue(c1.save());
+		assertTrue(c2.save());
+		assertTrue(s1.save());
+		assertTrue(s2.save());
+		Classroom c = new Classroom();
+		c.getStudentCollection().add(s1);
+		c.getStudentCollection().add(s2);
+		int rowsAffected = c.update(c2.get_id());
+		assertEquals(2, rowsAffected);
+		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
+		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
+	}
+
 	public void testUpdateAllWithStaticUpdate() {
 		Student s;
 		int[] ids = new int[5];
@@ -286,7 +381,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 			assertEquals(18, updatedStudent.getAge());
 		}
 	}
-	
+
 	public void testUpdateAllRowsWithInstanceUpdate() {
 		Cursor c = Connector.getDatabase().query("Student", null, null, null, null, null, null);
 		int allRows = c.getCount();
@@ -367,7 +462,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 					e.getMessage());
 		}
 	}
-	
+
 	public void testUpdateAllWithInstanceUpdateWithConstructor() {
 		try {
 			Computer computer = new Computer("ACER", 5444);
@@ -379,7 +474,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 					e.getMessage());
 		}
 	}
-	
+
 	public void testUpdateAllWithInstanceUpdateButWrongConditions() {
 		Student student = new Student();
 		student.setName("Dustee");
