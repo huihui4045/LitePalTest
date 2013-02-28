@@ -223,62 +223,120 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		assertEquals(0, rowsAffected);
 	}
 
-	public void testUpdateM2OAssociationsOnMSideWithInstanceUpdate() {
-		initForAssociations();
-		s1.setClassroom(c1);
-		s2.setClassroom(c1);
-		assertTrue(c1.save());
-		assertTrue(c2.save());
-		assertTrue(s1.save());
-		assertTrue(s2.save());
-		Student st = new Student();
-		st.setClassroom(c2);
-		int rowsAffected = st.update(s1.getId());
-		assertEquals(1, rowsAffected);
-		rowsAffected = st.update(s2.getId());
-		assertEquals(1, rowsAffected);
-		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
-	}
-	
-	public void testUpdateM2OAssociationsAndOtherFieldsOnMSideWithInstanceUpdate() {
-		initForAssociations();
-		s1.setClassroom(c1);
-		s2.setClassroom(c1);
-		assertTrue(c1.save());
-		assertTrue(c2.save());
-		assertTrue(s1.save());
-		assertTrue(s2.save());
-		Student st = new Student();
-		st.setName("Jackson");
-		st.setClassroom(c2);
-		int rowsAffected = st.update(s1.getId());
-		assertEquals(1, rowsAffected);
-		rowsAffected = st.update(s2.getId());
-		assertEquals(1, rowsAffected);
-		assertEquals("Jackson", getStudent(s1.getId()).getName());
-		assertEquals("Jackson", getStudent(s2.getId()).getName());
-		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
-	}
-
-
-	public void testUpdateM2OAssociationsOnOSideWithInstanceUpdate() {
-		initForAssociations();
-		c1.getStudentCollection().add(s1);
-		c1.getStudentCollection().add(s2);
-		assertTrue(c1.save());
-		assertTrue(c2.save());
-		assertTrue(s1.save());
-		assertTrue(s2.save());
-		Classroom c = new Classroom();
-		c.getStudentCollection().add(s1);
-		c.getStudentCollection().add(s2);
-		int rowsAffected = c.update(c2.get_id());
-		assertEquals(2, rowsAffected);
-		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
-	}
+//	public void testUpdateM2OAssociationsOnMSideWithInstanceUpdate() {
+//		initForAssociations();
+//		s1.setClassroom(c1);
+//		s2.setClassroom(c1);
+//		assertTrue(c1.save());
+//		assertTrue(c2.save());
+//		assertTrue(s1.save());
+//		assertTrue(s2.save());
+//		Student st = new Student();
+//		st.setClassroom(c2);
+//		int rowsAffected = st.update(s1.getId());
+//		assertEquals(1, rowsAffected);
+//		rowsAffected = st.update(s2.getId());
+//		assertEquals(1, rowsAffected);
+//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
+//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
+//	}
+//
+//	public void testUpdateM2OAssociationsAndOtherFieldsOnMSideWithInstanceUpdate() {
+//		initForAssociations();
+//		s1.setClassroom(c1);
+//		s2.setClassroom(c1);
+//		assertTrue(c1.save());
+//		assertTrue(c2.save());
+//		assertTrue(s1.save());
+//		assertTrue(s2.save());
+//		Student st = new Student();
+//		st.setName("Jackson");
+//		st.setClassroom(c2);
+//		int rowsAffected = st.update(s1.getId());
+//		assertEquals(1, rowsAffected);
+//		rowsAffected = st.update(s2.getId());
+//		assertEquals(1, rowsAffected);
+//		assertEquals("Jackson", getStudent(s1.getId()).getName());
+//		assertEquals("Jackson", getStudent(s2.getId()).getName());
+//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
+//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
+//	}
+//
+//	public void testUpdateM2OAssociationsOnOSideWithInstanceUpdate() {
+//		initForAssociations();
+//		c1.getStudentCollection().add(s1);
+//		c1.getStudentCollection().add(s2);
+//		assertTrue(c1.save());
+//		assertTrue(c2.save());
+//		assertTrue(s1.save());
+//		assertTrue(s2.save());
+//		Classroom c = new Classroom();
+//		c.getStudentCollection().add(s1);
+//		c.getStudentCollection().add(s2);
+//		int rowsAffected = c.update(c2.get_id());
+//		assertEquals(2, rowsAffected);
+//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
+//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
+//	}
+//
+//	public void testUpdateM2OAssociationsAndOtherFieldsOnOSideWithInstanceUpdate() {
+//		initForAssociations();
+//		c1.getStudentCollection().add(s1);
+//		c1.getStudentCollection().add(s2);
+//		assertTrue(c1.save());
+//		assertTrue(c2.save());
+//		assertTrue(s1.save());
+//		assertTrue(s2.save());
+//		Classroom c = new Classroom();
+//		c.setName("Game room");
+//		c.getStudentCollection().add(s1);
+//		c.getStudentCollection().add(s2);
+//		int rowsAffected = c.update(c2.get_id());
+//		assertEquals(3, rowsAffected);
+//		assertEquals("Game room", getClassroom(c2.get_id()).getName());
+//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
+//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
+//	}
+//
+//	public void testUpdateM2OAssociationsOnMSideWithNotExistsRecordWithInstanceUpdate() {
+//		initForAssociations();
+//		s1.setClassroom(c1);
+//		s2.setClassroom(c1);
+//		assertTrue(c1.save());
+//		assertTrue(s1.save());
+//		assertTrue(s2.save());
+//		Student s = new Student();
+//		s.setClassroom(c2);
+//		int rowsAffected = s.update(s1.getId());
+//		assertEquals(0, rowsAffected);
+//		s.update(s2.getId());
+//		assertEquals(0, rowsAffected);
+//		assertEquals(c1.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
+//		assertEquals(c1.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
+//	}
+//
+//	public void testUpdateM2OAssociationsOnOSideWithNotExistsRecordWithInstanceUpdate() {
+//		initForAssociations();
+//		c1.getStudentCollection().add(s1);
+//		c1.getStudentCollection().add(s2);
+//		assertTrue(c1.save());
+//		assertTrue(c2.save());
+//		assertTrue(s1.save());
+//		Classroom c = new Classroom();
+//		c.getStudentCollection().add(s1);
+//		c.getStudentCollection().add(s2);
+//		c.update(c2.get_id());
+//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
+//	}
+//
+//	public void testUpdateM2OAssociationsOnMSideWithNullWithInstanceUpdate() {
+//		initForAssociations();
+//		s1.setClassroom(c1);
+//		s2.setClassroom(c1);
+//		assertTrue(c1.save());
+//		assertTrue(s1.save());
+//		assertTrue(s2.save());
+//	}
 
 	public void testUpdateAllWithStaticUpdate() {
 		Student s;
