@@ -129,7 +129,6 @@ public class UpdateUsingSaveMethodTest extends LitePalTestCase {
 		c2.getStudentCollection().add(s2);
 		assertTrue(c2.save());
 		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-		assertEquals(0, s2.getId());
 	}
 
 	public void testUpdateM2OAssociationsOnMSideWithNull() {
