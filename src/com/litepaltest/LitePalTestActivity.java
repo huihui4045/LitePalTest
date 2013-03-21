@@ -10,10 +10,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.litepaltest.model.IdCard;
-import com.litepaltest.model.Student;
-import com.litepaltest.model.Teacher;
-
 public class LitePalTestActivity extends Activity {
 	public static final String TAG = "LitePalTestActivity";
 	Button button;
