@@ -89,12 +89,12 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 	public void testUpdateWithStaticUpdate() {
 		ContentValues values = new ContentValues();
 		values.put("TEACHERNAME", "Toy");
-		int rowsAffected = DataSupport.update(Teacher.class, teacher.getId(), values);
+		int rowsAffected = DataSupport.update(Teacher.class, values, teacher.getId());
 		assertEquals(1, rowsAffected);
 		assertEquals("Toy", getTeacher(teacher.getId()).getTeacherName());
 		values.clear();
 		values.put("aGe", 15);
-		rowsAffected = DataSupport.update(Student.class, student.getId(), values);
+		rowsAffected = DataSupport.update(Student.class, values, student.getId());
 		assertEquals(1, rowsAffected);
 		assertEquals(15, getStudent(student.getId()).getAge());
 	}
@@ -103,7 +103,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		ContentValues values = new ContentValues();
 		values.put("TEACHERNAME", "Toy");
 		try {
-			DataSupport.update(Object.class, teacher.getId(), values);
+			DataSupport.update(Object.class, values, teacher.getId());
 		} catch (SQLiteException e) {
 			assertEquals(
 					"no such table: object: , while compiling: UPDATE object SET TEACHERNAME=? WHERE id = "
@@ -115,7 +115,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		ContentValues values = new ContentValues();
 		values.put("TEACHERYEARS", 13);
 		try {
-			DataSupport.update(Teacher.class, teacher.getId(), values);
+			DataSupport.update(Teacher.class, values, teacher.getId());
 			fail("no such column: TEACHERYEARS");
 		} catch (SQLiteException e) {
 			assertEquals(
@@ -127,7 +127,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 	public void testUpdateWithStaticUpdateButNotExistsRecord() {
 		ContentValues values = new ContentValues();
 		values.put("TEACHERNAME", "Toy");
-		int rowsAffected = DataSupport.update(Teacher.class, 998909, values);
+		int rowsAffected = DataSupport.update(Teacher.class, values, 998909);
 		assertEquals(0, rowsAffected);
 	}
 
@@ -223,120 +223,136 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		assertEquals(0, rowsAffected);
 	}
 
-//	public void testUpdateM2OAssociationsOnMSideWithInstanceUpdate() {
-//		initForAssociations();
-//		s1.setClassroom(c1);
-//		s2.setClassroom(c1);
-//		assertTrue(c1.save());
-//		assertTrue(c2.save());
-//		assertTrue(s1.save());
-//		assertTrue(s2.save());
-//		Student st = new Student();
-//		st.setClassroom(c2);
-//		int rowsAffected = st.update(s1.getId());
-//		assertEquals(1, rowsAffected);
-//		rowsAffected = st.update(s2.getId());
-//		assertEquals(1, rowsAffected);
-//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
-//	}
-//
-//	public void testUpdateM2OAssociationsAndOtherFieldsOnMSideWithInstanceUpdate() {
-//		initForAssociations();
-//		s1.setClassroom(c1);
-//		s2.setClassroom(c1);
-//		assertTrue(c1.save());
-//		assertTrue(c2.save());
-//		assertTrue(s1.save());
-//		assertTrue(s2.save());
-//		Student st = new Student();
-//		st.setName("Jackson");
-//		st.setClassroom(c2);
-//		int rowsAffected = st.update(s1.getId());
-//		assertEquals(1, rowsAffected);
-//		rowsAffected = st.update(s2.getId());
-//		assertEquals(1, rowsAffected);
-//		assertEquals("Jackson", getStudent(s1.getId()).getName());
-//		assertEquals("Jackson", getStudent(s2.getId()).getName());
-//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
-//	}
-//
-//	public void testUpdateM2OAssociationsOnOSideWithInstanceUpdate() {
-//		initForAssociations();
-//		c1.getStudentCollection().add(s1);
-//		c1.getStudentCollection().add(s2);
-//		assertTrue(c1.save());
-//		assertTrue(c2.save());
-//		assertTrue(s1.save());
-//		assertTrue(s2.save());
-//		Classroom c = new Classroom();
-//		c.getStudentCollection().add(s1);
-//		c.getStudentCollection().add(s2);
-//		int rowsAffected = c.update(c2.get_id());
-//		assertEquals(2, rowsAffected);
-//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
-//	}
-//
-//	public void testUpdateM2OAssociationsAndOtherFieldsOnOSideWithInstanceUpdate() {
-//		initForAssociations();
-//		c1.getStudentCollection().add(s1);
-//		c1.getStudentCollection().add(s2);
-//		assertTrue(c1.save());
-//		assertTrue(c2.save());
-//		assertTrue(s1.save());
-//		assertTrue(s2.save());
-//		Classroom c = new Classroom();
-//		c.setName("Game room");
-//		c.getStudentCollection().add(s1);
-//		c.getStudentCollection().add(s2);
-//		int rowsAffected = c.update(c2.get_id());
-//		assertEquals(3, rowsAffected);
-//		assertEquals("Game room", getClassroom(c2.get_id()).getName());
-//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
-//	}
-//
-//	public void testUpdateM2OAssociationsOnMSideWithNotExistsRecordWithInstanceUpdate() {
-//		initForAssociations();
-//		s1.setClassroom(c1);
-//		s2.setClassroom(c1);
-//		assertTrue(c1.save());
-//		assertTrue(s1.save());
-//		assertTrue(s2.save());
-//		Student s = new Student();
-//		s.setClassroom(c2);
-//		int rowsAffected = s.update(s1.getId());
-//		assertEquals(0, rowsAffected);
-//		s.update(s2.getId());
-//		assertEquals(0, rowsAffected);
-//		assertEquals(c1.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-//		assertEquals(c1.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
-//	}
-//
-//	public void testUpdateM2OAssociationsOnOSideWithNotExistsRecordWithInstanceUpdate() {
-//		initForAssociations();
-//		c1.getStudentCollection().add(s1);
-//		c1.getStudentCollection().add(s2);
-//		assertTrue(c1.save());
-//		assertTrue(c2.save());
-//		assertTrue(s1.save());
-//		Classroom c = new Classroom();
-//		c.getStudentCollection().add(s1);
-//		c.getStudentCollection().add(s2);
-//		c.update(c2.get_id());
-//		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
-//	}
-//
-//	public void testUpdateM2OAssociationsOnMSideWithNullWithInstanceUpdate() {
-//		initForAssociations();
-//		s1.setClassroom(c1);
-//		s2.setClassroom(c1);
-//		assertTrue(c1.save());
-//		assertTrue(s1.save());
-//		assertTrue(s2.save());
-//	}
+	// public void testUpdateM2OAssociationsOnMSideWithInstanceUpdate() {
+	// initForAssociations();
+	// s1.setClassroom(c1);
+	// s2.setClassroom(c1);
+	// assertTrue(c1.save());
+	// assertTrue(c2.save());
+	// assertTrue(s1.save());
+	// assertTrue(s2.save());
+	// Student st = new Student();
+	// st.setClassroom(c2);
+	// int rowsAffected = st.update(s1.getId());
+	// assertEquals(1, rowsAffected);
+	// rowsAffected = st.update(s2.getId());
+	// assertEquals(1, rowsAffected);
+	// assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom",
+	// s1.getId()));
+	// assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom",
+	// s2.getId()));
+	// }
+	//
+	// public void
+	// testUpdateM2OAssociationsAndOtherFieldsOnMSideWithInstanceUpdate() {
+	// initForAssociations();
+	// s1.setClassroom(c1);
+	// s2.setClassroom(c1);
+	// assertTrue(c1.save());
+	// assertTrue(c2.save());
+	// assertTrue(s1.save());
+	// assertTrue(s2.save());
+	// Student st = new Student();
+	// st.setName("Jackson");
+	// st.setClassroom(c2);
+	// int rowsAffected = st.update(s1.getId());
+	// assertEquals(1, rowsAffected);
+	// rowsAffected = st.update(s2.getId());
+	// assertEquals(1, rowsAffected);
+	// assertEquals("Jackson", getStudent(s1.getId()).getName());
+	// assertEquals("Jackson", getStudent(s2.getId()).getName());
+	// assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom",
+	// s1.getId()));
+	// assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom",
+	// s2.getId()));
+	// }
+	//
+	// public void testUpdateM2OAssociationsOnOSideWithInstanceUpdate() {
+	// initForAssociations();
+	// c1.getStudentCollection().add(s1);
+	// c1.getStudentCollection().add(s2);
+	// assertTrue(c1.save());
+	// assertTrue(c2.save());
+	// assertTrue(s1.save());
+	// assertTrue(s2.save());
+	// Classroom c = new Classroom();
+	// c.getStudentCollection().add(s1);
+	// c.getStudentCollection().add(s2);
+	// int rowsAffected = c.update(c2.get_id());
+	// assertEquals(2, rowsAffected);
+	// assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom",
+	// s1.getId()));
+	// assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom",
+	// s2.getId()));
+	// }
+	//
+	// public void
+	// testUpdateM2OAssociationsAndOtherFieldsOnOSideWithInstanceUpdate() {
+	// initForAssociations();
+	// c1.getStudentCollection().add(s1);
+	// c1.getStudentCollection().add(s2);
+	// assertTrue(c1.save());
+	// assertTrue(c2.save());
+	// assertTrue(s1.save());
+	// assertTrue(s2.save());
+	// Classroom c = new Classroom();
+	// c.setName("Game room");
+	// c.getStudentCollection().add(s1);
+	// c.getStudentCollection().add(s2);
+	// int rowsAffected = c.update(c2.get_id());
+	// assertEquals(3, rowsAffected);
+	// assertEquals("Game room", getClassroom(c2.get_id()).getName());
+	// assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom",
+	// s1.getId()));
+	// assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom",
+	// s2.getId()));
+	// }
+	//
+	// public void
+	// testUpdateM2OAssociationsOnMSideWithNotExistsRecordWithInstanceUpdate() {
+	// initForAssociations();
+	// s1.setClassroom(c1);
+	// s2.setClassroom(c1);
+	// assertTrue(c1.save());
+	// assertTrue(s1.save());
+	// assertTrue(s2.save());
+	// Student s = new Student();
+	// s.setClassroom(c2);
+	// int rowsAffected = s.update(s1.getId());
+	// assertEquals(0, rowsAffected);
+	// s.update(s2.getId());
+	// assertEquals(0, rowsAffected);
+	// assertEquals(c1.get_id(), getForeignKeyValue("student", "classroom",
+	// s1.getId()));
+	// assertEquals(c1.get_id(), getForeignKeyValue("student", "classroom",
+	// s2.getId()));
+	// }
+	//
+	// public void
+	// testUpdateM2OAssociationsOnOSideWithNotExistsRecordWithInstanceUpdate() {
+	// initForAssociations();
+	// c1.getStudentCollection().add(s1);
+	// c1.getStudentCollection().add(s2);
+	// assertTrue(c1.save());
+	// assertTrue(c2.save());
+	// assertTrue(s1.save());
+	// Classroom c = new Classroom();
+	// c.getStudentCollection().add(s1);
+	// c.getStudentCollection().add(s2);
+	// c.update(c2.get_id());
+	// assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom",
+	// s1.getId()));
+	// }
+	//
+	// public void testUpdateM2OAssociationsOnMSideWithNullWithInstanceUpdate()
+	// {
+	// initForAssociations();
+	// s1.setClassroom(c1);
+	// s2.setClassroom(c1);
+	// assertTrue(c1.save());
+	// assertTrue(s1.save());
+	// assertTrue(s2.save());
+	// }
 
 	public void testUpdateAllWithStaticUpdate() {
 		Student s;
@@ -350,15 +366,14 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		}
 		ContentValues values = new ContentValues();
 		values.put("age", 24);
-		int affectedRows = DataSupport.updateAll(Student.class, new String[] {
-				"name = ? and age = ?", "Dusting", "13" }, values);
+		int affectedRows = DataSupport.updateAll(Student.class, values, "name = ? and age = ?",
+				"Dusting", "13");
 		assertEquals(1, affectedRows);
 		Student updatedStu = getStudent(ids[3]);
 		assertEquals(24, updatedStu.getAge());
 		values.clear();
 		values.put("name", "Dustee");
-		affectedRows = DataSupport.updateAll(Student.class, new String[] { "name = ?", "Dusting" },
-				values);
+		affectedRows = DataSupport.updateAll(Student.class, values, "name = ?", "Dusting");
 		assertEquals(5, affectedRows);
 		List<Student> students = getStudents(ids);
 		for (Student updatedStudent : students) {
@@ -370,20 +385,16 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		int allRows = getRowsCount("student");
 		ContentValues values = new ContentValues();
 		values.put("name", "Zuckerburg");
-		int affectedRows = DataSupport.updateAll(Student.class, null, values);
+		int affectedRows = DataSupport.updateAll(Student.class, values, null);
 		assertEquals(allRows, affectedRows);
-		affectedRows = DataSupport.updateAll(Student.class, new String[] {}, values);
+		affectedRows = DataSupport.updateAll(Student.class, values, "");
 		assertEquals(allRows, affectedRows);
-		affectedRows = DataSupport.updateAll(Student.class, new String[] { "" }, values);
-		assertEquals(allRows, affectedRows);
-		affectedRows = DataSupport.updateAll(Student.class, new String[] { null }, values);
-		assertEquals(allRows, affectedRows);
-		affectedRows = DataSupport.updateAll(Student.class, new String[] { "  " }, values);
+		affectedRows = DataSupport.updateAll(Student.class, values, "  ");
 		assertEquals(allRows, affectedRows);
 		allRows = getRowsCount("student_teacher");
 		values.clear();
 		values.putNull("student_id");
-		affectedRows = DataSupport.updateAll("student_teacher", null, values);
+		affectedRows = DataSupport.updateAll("student_teacher", values, "");
 		assertEquals(allRows, affectedRows);
 	}
 
@@ -391,19 +402,19 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		ContentValues values = new ContentValues();
 		values.put("name", "Dustee");
 		try {
-			DataSupport.updateAll(Student.class, new String[] { "name = 'Dustin'", "aaa" }, values);
+			DataSupport.updateAll(Student.class, values, "name = 'Dustin'", "aaa");
 			fail();
 		} catch (DataSupportException e) {
 			assertEquals("The parameters in conditions are incorrect.", e.getMessage());
 		}
 		try {
-			DataSupport.updateAll(Student.class, new String[] { null, null }, values);
+			DataSupport.updateAll(Student.class, values, null, null);
 			fail();
 		} catch (DataSupportException e) {
 			assertEquals("The parameters in conditions are incorrect.", e.getMessage());
 		}
 		try {
-			DataSupport.updateAll(Student.class, new String[] { "address = ?", "HK" }, values);
+			DataSupport.updateAll(Student.class, values, "address = ?", "HK");
 			fail();
 		} catch (SQLiteException e) {
 			assertEquals(
@@ -448,13 +459,9 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		student.setName("Zuckerburg");
 		int affectedRows = student.updateAll(null);
 		assertEquals(allRows, affectedRows);
-		affectedRows = student.updateAll(new String[] {});
+		affectedRows = student.updateAll("");
 		assertEquals(allRows, affectedRows);
-		affectedRows = student.updateAll(new String[] { "" });
-		assertEquals(allRows, affectedRows);
-		affectedRows = student.updateAll(new String[] { null });
-		assertEquals(allRows, affectedRows);
-		affectedRows = student.updateAll(new String[] { "  " });
+		affectedRows = student.updateAll("  ");
 		assertEquals(allRows, affectedRows);
 	}
 
@@ -475,7 +482,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		t.setTeachYears(0);
 		t.setSex(true);
 		t.setAge(22);
-		int affectedTeacher = t.updateAll(new String[] { "teachername = 'Rose Jackson'" });
+		int affectedTeacher = t.updateAll("teachername = 'Rose Jackson'");
 		assertEquals(0, affectedTeacher);
 		List<Teacher> teachers = getTeachers(ids);
 		for (Teacher updatedTeacher : teachers) {
@@ -512,7 +519,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		try {
 			Teacher t = new Teacher();
 			t.setToDefault("name");
-			t.updateAll(null);
+			t.updateAll("");
 			fail();
 		} catch (DataSupportException e) {
 			assertEquals(
@@ -525,7 +532,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		try {
 			Computer computer = new Computer("ACER", 5444);
 			computer.save();
-			computer.updateAll(null);
+			computer.updateAll("");
 			fail();
 		} catch (DataSupportException e) {
 			assertEquals("com.litepaltest.model.Computer needs a default constructor.",

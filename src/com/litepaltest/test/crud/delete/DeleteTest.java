@@ -250,11 +250,11 @@ public class DeleteTest extends LitePalTestCase {
 			s.save();
 			ids[i] = s.getId();
 		}
-		int affectedRows = DataSupport.deleteAll(Student.class, new String[] {
-				"name = ? and age = ?", "Dusting", "13" });
+		int affectedRows = DataSupport.deleteAll(Student.class, "name = ? and age = ?", "Dusting",
+				"13");
 		assertEquals(1, affectedRows);
 		assertNull(getStudent(ids[3]));
-		affectedRows = DataSupport.deleteAll(Student.class, new String[] { "name = 'Dusting'" });
+		affectedRows = DataSupport.deleteAll(Student.class, "name = 'Dusting'");
 		assertEquals(4, affectedRows);
 	}
 
@@ -265,38 +265,38 @@ public class DeleteTest extends LitePalTestCase {
 		affectedRows = DataSupport.deleteAll(Teacher.class, null);
 		assertEquals(rowsCount, affectedRows);
 		rowsCount = getRowsCount("student");
-		affectedRows = DataSupport.deleteAll(Student.class, new String[] {});
+		affectedRows = DataSupport.deleteAll(Student.class, "");
 		assertEquals(rowsCount, affectedRows);
 		rowsCount = getRowsCount("idcard");
-		affectedRows = DataSupport.deleteAll(IdCard.class, new String[] { null });
+		affectedRows = DataSupport.deleteAll(IdCard.class, "   ");
 		assertEquals(rowsCount, affectedRows);
 		createStudentsTeachersWithAssociations();
 		rowsCount = getRowsCount("teacher");
-		affectedRows = DataSupport.deleteAll(Teacher.class, new String[] { "" });
+		affectedRows = DataSupport.deleteAll(Teacher.class, "");
 		assertEquals(rowsCount, affectedRows);
 		rowsCount = getRowsCount("student");
-		affectedRows = DataSupport.deleteAll(Student.class, new String[] { "    " });
+		affectedRows = DataSupport.deleteAll(Student.class, "");
 		assertEquals(rowsCount, affectedRows);
 		rowsCount = getRowsCount("student_teacher");
-		affectedRows = DataSupport.deleteAll("student_teacher", null);
+		affectedRows = DataSupport.deleteAll("student_teacher", "");
 		assertEquals(rowsCount, affectedRows);
 	}
 
 	public void testDeleteAllWithWrongConditions() {
 		try {
-			DataSupport.deleteAll(Student.class, new String[] { "name = 'Dustin'", "aaa" });
+			DataSupport.deleteAll(Student.class, "name = 'Dustin'", "aaa");
 			fail();
 		} catch (DataSupportException e) {
 			assertEquals("The parameters in conditions are incorrect.", e.getMessage());
 		}
 		try {
-			DataSupport.deleteAll(Student.class, new String[] { null, null });
+			DataSupport.deleteAll(Student.class, null, null);
 			fail();
 		} catch (DataSupportException e) {
 			assertEquals("The parameters in conditions are incorrect.", e.getMessage());
 		}
 		try {
-			DataSupport.deleteAll(Student.class, new String[] { "address = ?", "HK" });
+			DataSupport.deleteAll(Student.class, "address = ?", "HK");
 			fail();
 		} catch (SQLiteException e) {
 			assertEquals(
