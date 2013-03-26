@@ -13,6 +13,7 @@ import android.test.AndroidTestCase;
 
 import com.litepaltest.model.Cellphone;
 import com.litepaltest.model.Classroom;
+import com.litepaltest.model.Computer;
 import com.litepaltest.model.IdCard;
 import com.litepaltest.model.Student;
 import com.litepaltest.model.Teacher;
@@ -26,7 +27,7 @@ public class LitePalTestCase extends AndroidTestCase {
 	protected void assertM2MFalse(String table1, String table2, long id1, long id2) {
 		assertFalse(isIntermediateDataCorrect(table1, table2, id1, id2));
 	}
-	
+
 	/**
 	 * 
 	 * @param table1
@@ -105,7 +106,7 @@ public class LitePalTestCase extends AndroidTestCase {
 	protected String getTableName(Object object) {
 		return object.getClass().getSimpleName();
 	}
-	
+
 	protected int getRowsCount(String tableName) {
 		int count = 0;
 		Cursor c = Connector.getDatabase().query(tableName, null, null, null, null, null, null);
@@ -126,7 +127,7 @@ public class LitePalTestCase extends AndroidTestCase {
 		cursor.close();
 		return c;
 	}
-	
+
 	protected IdCard getIdCard(long id) {
 		IdCard card = null;
 		Cursor cursor = Connector.getDatabase().query("IdCard", null, "id = ?",
@@ -140,6 +141,21 @@ public class LitePalTestCase extends AndroidTestCase {
 		}
 		cursor.close();
 		return card;
+	}
+
+	protected Computer getComputer(long id) {
+		Computer computer = null;
+		Cursor cursor = Connector.getDatabase().query("Computer", null, "id = ?",
+				new String[] { String.valueOf(id) }, null, null, null);
+		if (cursor.moveToFirst()) {
+			computer = new Computer("", 0);
+			double newPrice = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
+			String brand = cursor.getString(cursor.getColumnIndexOrThrow("brand"));
+			computer.setBrand(brand);
+			computer.setPrice(newPrice);
+		}
+		cursor.close();
+		return computer;
 	}
 
 	protected Cellphone getCellPhone(long id) {

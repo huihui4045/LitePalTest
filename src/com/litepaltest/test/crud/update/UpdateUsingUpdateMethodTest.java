@@ -529,15 +529,18 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 	}
 
 	public void testUpdateAllWithInstanceUpdateWithConstructor() {
-		try {
-			Computer computer = new Computer("ACER", 5444);
-			computer.save();
-			computer.updateAll("");
-			fail();
-		} catch (DataSupportException e) {
-			assertEquals("com.litepaltest.model.Computer needs a default constructor.",
-					e.getMessage());
-		}
+		Computer computer = new Computer("ACER", 5444);
+		assertTrue(computer.save());
+		computer.setBrand("HP");
+		int rowsAffected = computer.update(computer.getId());
+		assertEquals(1, rowsAffected);
+		Computer newComputer = getComputer(computer.getId());
+		assertEquals("HP", newComputer.getBrand());
+		Computer computer2 = new Computer("SONY", 7999);
+		assertTrue(computer2.save());
+		Computer updateComputers = new Computer("", 0.0);
+		rowsAffected = updateComputers.updateAll("");
+		assertEquals(2, rowsAffected);
 	}
 
 	public void testUpdateAllWithInstanceUpdateButWrongConditions() {
