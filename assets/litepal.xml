@@ -24,7 +24,7 @@
 		    	
     	Note this mark is necessary.
      -->
-    <version value="239" ></version>
+    <version value="241" ></version>
 
     <!-- 
     	Define your models in the list with mapping mark, LitePal will create
@@ -46,6 +46,7 @@
         <mapping class="com.litepaltest.model.Student" ></mapping>
         <mapping class="com.litepaltest.model.Cellphone" ></mapping>
         <mapping class="com.litepaltest.model.Computer"></mapping>
+        <mapping class="com.litepaltest.model.Book"></mapping>
     </list>
 
     <!-- 
