@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
+import com.litepaltest.model.Book;
 import com.litepaltest.model.Cellphone;
 import com.litepaltest.model.Classroom;
 import com.litepaltest.model.Computer;
@@ -113,6 +114,27 @@ public class LitePalTestCase extends AndroidTestCase {
 		count = c.getCount();
 		c.close();
 		return count;
+	}
+
+	protected List<Book> getBooks() {
+		List<Book> books = new ArrayList<Book>();
+		Cursor cursor = Connector.getDatabase().query("Book", null, null, null, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
+				String bookName = cursor.getString(cursor.getColumnIndexOrThrow("bookname"));
+				int pages = cursor.getInt(cursor.getColumnIndexOrThrow("pages"));
+				double price = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
+				Book book = new Book();
+				book.setId(id);
+				book.setBookName(bookName);
+				book.setPages(pages);
+				book.setPrice(price);
+				books.add(book);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		return books;
 	}
 
 	protected Classroom getClassroom(long id) {

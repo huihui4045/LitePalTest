@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.litepal.crud.DataSupport;
 
-import android.test.AndroidTestCase;
-
 import com.litepaltest.model.Book;
+import com.litepaltest.test.LitePalTestCase;
 
-public class QueryBasicTest extends AndroidTestCase {
+public class QueryBasicTest extends LitePalTestCase {
 
 	public void testFind() {
 		short isbn = 30013;
@@ -22,6 +21,7 @@ public class QueryBasicTest extends AndroidTestCase {
 		book.setPublished(false);
 		book.save();
 		Book b = DataSupport.find(Book.class, book.getId());
+		assertEquals(book.getId(), b.getId());
 		assertEquals(10.5f, b.getArea());
 		assertEquals("Android First Line", b.getBookName());
 		assertEquals(isbn, b.getIsbn());
@@ -52,7 +52,6 @@ public class QueryBasicTest extends AndroidTestCase {
 		book2.setPrice(35.99);
 		book2.setPublished(false);
 		book2.save();
-		DataSupport.findMul(Book.class, new long[]{});
 		List<Book> bookList = DataSupport.findMul(Book.class, book1.getId(), book2.getId());
 		assertEquals(2, bookList.size());
 		for (Book book : bookList) {
@@ -76,6 +75,20 @@ public class QueryBasicTest extends AndroidTestCase {
 				continue;
 			}
 			fail();
+		}
+	}
+	
+	public void testFindAll() {
+		List<Book> expectBooks = getBooks();
+		List<Book> realBooks = DataSupport.findAll(Book.class);
+		assertEquals(expectBooks.size(), realBooks.size());
+		for (int i = 0; i < expectBooks.size(); i++) {
+			Book expectBook = expectBooks.get(i);
+			Book realBook = realBooks.get(i);
+			assertEquals(expectBook.getId(), realBook.getId());
+			assertEquals(expectBook.getBookName(), realBook.getBookName());
+			assertEquals(expectBook.getPages(), realBook.getPages());
+			assertEquals(expectBook.getPrice(), realBook.getPrice());
 		}
 	}
 
