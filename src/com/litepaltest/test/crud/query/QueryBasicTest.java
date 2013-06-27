@@ -52,7 +52,7 @@ public class QueryBasicTest extends LitePalTestCase {
 		book2.setPrice(35.99);
 		book2.setPublished(false);
 		book2.save();
-		List<Book> bookList = DataSupport.findMul(Book.class, book1.getId(), book2.getId());
+		List<Book> bookList = DataSupport.findAll(Book.class, book1.getId(), book2.getId());
 		assertEquals(2, bookList.size());
 		for (Book book : bookList) {
 			if (book.getId() == book1.getId()) {
