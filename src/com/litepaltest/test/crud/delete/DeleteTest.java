@@ -262,23 +262,23 @@ public class DeleteTest extends LitePalTestCase {
 		createStudentsTeachersWithIdCard();
 		int rowsCount = getRowsCount("teacher");
 		int affectedRows = 0;
-		affectedRows = DataSupport.deleteAll(Teacher.class, null);
+		affectedRows = DataSupport.deleteAll(Teacher.class);
 		assertEquals(rowsCount, affectedRows);
 		rowsCount = getRowsCount("student");
-		affectedRows = DataSupport.deleteAll(Student.class, "");
+		affectedRows = DataSupport.deleteAll(Student.class);
 		assertEquals(rowsCount, affectedRows);
 		rowsCount = getRowsCount("idcard");
-		affectedRows = DataSupport.deleteAll(IdCard.class, "   ");
+		affectedRows = DataSupport.deleteAll(IdCard.class);
 		assertEquals(rowsCount, affectedRows);
 		createStudentsTeachersWithAssociations();
 		rowsCount = getRowsCount("teacher");
-		affectedRows = DataSupport.deleteAll(Teacher.class, "");
+		affectedRows = DataSupport.deleteAll(Teacher.class);
 		assertEquals(rowsCount, affectedRows);
 		rowsCount = getRowsCount("student");
-		affectedRows = DataSupport.deleteAll(Student.class, "");
+		affectedRows = DataSupport.deleteAll(Student.class);
 		assertEquals(rowsCount, affectedRows);
 		rowsCount = getRowsCount("student_teacher");
-		affectedRows = DataSupport.deleteAll("student_teacher", "");
+		affectedRows = DataSupport.deleteAll("student_teacher");
 		assertEquals(rowsCount, affectedRows);
 	}
 

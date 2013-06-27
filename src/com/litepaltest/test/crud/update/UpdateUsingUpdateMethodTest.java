@@ -385,16 +385,12 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		int allRows = getRowsCount("student");
 		ContentValues values = new ContentValues();
 		values.put("name", "Zuckerburg");
-		int affectedRows = DataSupport.updateAll(Student.class, values, null);
-		assertEquals(allRows, affectedRows);
-		affectedRows = DataSupport.updateAll(Student.class, values, "");
-		assertEquals(allRows, affectedRows);
-		affectedRows = DataSupport.updateAll(Student.class, values, "  ");
+		int affectedRows = DataSupport.updateAll(Student.class, values);
 		assertEquals(allRows, affectedRows);
 		allRows = getRowsCount("student_teacher");
 		values.clear();
 		values.putNull("student_id");
-		affectedRows = DataSupport.updateAll("student_teacher", values, "");
+		affectedRows = DataSupport.updateAll("student_teacher", values);
 		assertEquals(allRows, affectedRows);
 	}
 
@@ -457,11 +453,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		c.close();
 		Student student = new Student();
 		student.setName("Zuckerburg");
-		int affectedRows = student.updateAll(null);
-		assertEquals(allRows, affectedRows);
-		affectedRows = student.updateAll("");
-		assertEquals(allRows, affectedRows);
-		affectedRows = student.updateAll("  ");
+		int affectedRows = student.updateAll();
 		assertEquals(allRows, affectedRows);
 	}
 
