@@ -77,7 +77,7 @@ public class QueryBasicTest extends LitePalTestCase {
 			fail();
 		}
 	}
-	
+
 	public void testFindAll() {
 		List<Book> expectBooks = getBooks();
 		List<Book> realBooks = DataSupport.findAll(Book.class);
@@ -89,7 +89,39 @@ public class QueryBasicTest extends LitePalTestCase {
 			assertEquals(expectBook.getBookName(), realBook.getBookName());
 			assertEquals(expectBook.getPages(), realBook.getPages());
 			assertEquals(expectBook.getPrice(), realBook.getPrice());
+			assertEquals(expectBook.getArea(), realBook.getArea());
+			assertEquals(expectBook.getIsbn(), realBook.getIsbn());
+			assertEquals(expectBook.getLevel(), realBook.getLevel());
+			assertEquals(expectBook.isPublished(), realBook.isPublished());
 		}
+	}
+
+	public void testFindFirst() {
+		List<Book> expectedBooks = getBooks();
+		Book expectedFirstBook = expectedBooks.get(0);
+		Book realFirstBook = DataSupport.findFirst(Book.class);
+		assertEquals(expectedFirstBook.getId(), realFirstBook.getId());
+		assertEquals(expectedFirstBook.getBookName(), realFirstBook.getBookName());
+		assertEquals(expectedFirstBook.getPages(), realFirstBook.getPages());
+		assertEquals(expectedFirstBook.getPrice(), realFirstBook.getPrice());
+		assertEquals(expectedFirstBook.getArea(), realFirstBook.getArea());
+		assertEquals(expectedFirstBook.getIsbn(), realFirstBook.getIsbn());
+		assertEquals(expectedFirstBook.getLevel(), realFirstBook.getLevel());
+		assertEquals(expectedFirstBook.isPublished(), realFirstBook.isPublished());
+	}
+
+	public void testFindLast() {
+		List<Book> expectedBooks = getBooks();
+		Book expectedLastBook = expectedBooks.get(expectedBooks.size() - 1);
+		Book realLastBook = DataSupport.findLast(Book.class);
+		assertEquals(expectedLastBook.getId(), realLastBook.getId());
+		assertEquals(expectedLastBook.getBookName(), realLastBook.getBookName());
+		assertEquals(expectedLastBook.getPages(), realLastBook.getPages());
+		assertEquals(expectedLastBook.getPrice(), realLastBook.getPrice());
+		assertEquals(expectedLastBook.getArea(), realLastBook.getArea());
+		assertEquals(expectedLastBook.getIsbn(), realLastBook.getIsbn());
+		assertEquals(expectedLastBook.getLevel(), realLastBook.getLevel());
+		assertEquals(expectedLastBook.isPublished(), realLastBook.isPublished());
 	}
 
 }

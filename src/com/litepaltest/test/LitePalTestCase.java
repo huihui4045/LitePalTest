@@ -125,11 +125,19 @@ public class LitePalTestCase extends AndroidTestCase {
 				String bookName = cursor.getString(cursor.getColumnIndexOrThrow("bookname"));
 				int pages = cursor.getInt(cursor.getColumnIndexOrThrow("pages"));
 				double price = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
+				char level = cursor.getString(cursor.getColumnIndexOrThrow("level")).charAt(0);
+				short isbn = cursor.getShort(cursor.getColumnIndexOrThrow("isbn"));
+				float area = cursor.getFloat(cursor.getColumnIndexOrThrow("area"));
+				boolean isPublished = cursor.getInt(cursor.getColumnIndexOrThrow("ispublished")) == 1;
 				Book book = new Book();
 				book.setId(id);
 				book.setBookName(bookName);
 				book.setPages(pages);
 				book.setPrice(price);
+				book.setLevel(level);
+				book.setIsbn(isbn);
+				book.setArea(area);
+				book.setPublished(isPublished);
 				books.add(book);
 			} while (cursor.moveToNext());
 		}
