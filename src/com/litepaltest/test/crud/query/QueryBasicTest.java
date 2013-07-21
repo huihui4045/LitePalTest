@@ -29,6 +29,7 @@ public class QueryBasicTest extends LitePalTestCase {
 		assertEquals(450, b.getPages());
 		assertEquals(49.99, b.getPrice());
 		assertFalse(b.isPublished());
+		assertTrue(b.isSaved());
 	}
 
 	public void testFindMul() {
@@ -63,6 +64,7 @@ public class QueryBasicTest extends LitePalTestCase {
 				assertEquals(434, book.getPages());
 				assertEquals(40.99, book.getPrice());
 				assertTrue(book.isPublished());
+				assertTrue(book.isSaved());
 				continue;
 			} else if (book.getId() == book2.getId()) {
 				assertEquals(8.8f, book.getArea());
@@ -72,6 +74,7 @@ public class QueryBasicTest extends LitePalTestCase {
 				assertEquals(411, book.getPages());
 				assertEquals(35.99, book.getPrice());
 				assertFalse(book.isPublished());
+				assertTrue(book.isSaved());
 				continue;
 			}
 			fail();
@@ -93,6 +96,7 @@ public class QueryBasicTest extends LitePalTestCase {
 			assertEquals(expectBook.getIsbn(), realBook.getIsbn());
 			assertEquals(expectBook.getLevel(), realBook.getLevel());
 			assertEquals(expectBook.isPublished(), realBook.isPublished());
+			assertTrue(realBook.isSaved());
 		}
 	}
 
@@ -108,6 +112,7 @@ public class QueryBasicTest extends LitePalTestCase {
 		assertEquals(expectedFirstBook.getIsbn(), realFirstBook.getIsbn());
 		assertEquals(expectedFirstBook.getLevel(), realFirstBook.getLevel());
 		assertEquals(expectedFirstBook.isPublished(), realFirstBook.isPublished());
+		assertTrue(realFirstBook.isSaved());
 	}
 
 	public void testFindLast() {
@@ -122,6 +127,7 @@ public class QueryBasicTest extends LitePalTestCase {
 		assertEquals(expectedLastBook.getIsbn(), realLastBook.getIsbn());
 		assertEquals(expectedLastBook.getLevel(), realLastBook.getLevel());
 		assertEquals(expectedLastBook.isPublished(), realLastBook.isPublished());
+		assertTrue(realLastBook.isSaved());
 	}
 
 }
