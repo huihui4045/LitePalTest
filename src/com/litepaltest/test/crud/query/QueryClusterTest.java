@@ -43,4 +43,25 @@ public class QueryClusterTest extends LitePalTestCase {
 		assertEquals(expectedBooks.size(), realBooks.size());
 	}
 
+	public void testOrder() {
+		List<Book> books = DataSupport.order("ID").execute(Book.class);
+		Book lastBook = null;
+		for (int i = 0; i < books.size(); i++) {
+			Book book = books.get(i);
+			if (lastBook != null) {
+				assertTrue(book.getId() > lastBook.getId());
+			}
+			lastBook = book;
+		}
+		List<Book> inverseBooks = DataSupport.order("ID desc").execute(Book.class);
+		Book inverselastBook = null;
+		for (int i = 0; i < inverseBooks.size(); i++) {
+			Book book = inverseBooks.get(i);
+			if (inverselastBook != null) {
+				assertTrue(book.getId() < inverselastBook.getId());
+			}
+			inverselastBook = book;
+		}
+	}
+
 }
