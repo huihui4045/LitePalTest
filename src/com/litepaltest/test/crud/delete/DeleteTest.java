@@ -299,9 +299,6 @@ public class DeleteTest extends LitePalTestCase {
 			DataSupport.deleteAll(Student.class, "address = ?", "HK");
 			fail();
 		} catch (SQLiteException e) {
-			assertEquals(
-					"no such column: address: , while compiling: DELETE FROM student WHERE address = ?",
-					e.getMessage());
 		}
 	}
 

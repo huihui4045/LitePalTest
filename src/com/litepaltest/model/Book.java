@@ -1,8 +1,12 @@
 package com.litepaltest.model;
 
+import java.io.Serializable;
+
 import org.litepal.crud.DataSupport;
 
-public class Book extends DataSupport {
+public class Book extends DataSupport implements Serializable{
+
+	private static final long serialVersionUID = 9040804172147110007L;
 
 	private long id;
 
