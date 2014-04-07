@@ -119,19 +119,33 @@ public class QueryClusterTest extends LitePalTestCase {
 	}
 
 	public void testCluster() {
-		List<Book> books = DataSupport.select("pages", "isPublished").where("price = ?", "40.99")
-				.order("id desc").limit(2).find(Book.class);
-		for (Book book : books) {
-			assertTrue(book.isSaved());
-			assertNull(book.getBookName());
-			assertEquals(434, book.getPages());
-			assertEquals(true, book.isPublished());
-			assertEquals(0f, book.getArea());
-			assertEquals(0.0, book.getPrice());
-			assertEquals(0, book.getIsbn());
-			assertEquals(0, book.getLevel());
+		long[] ids = new long[3];
+		for (int i = 0; i < 3; i++) {
+			Book book = new Book();
+			book.setPages(5555);
+			book.setPublished(true);
+			book.setPrice(40.99);
+			book.save();
+			ids[i] = book.getId();
 		}
-		assertTrue(books.get(0).getId() > books.get(1).getId());
+		List<Book> books = DataSupport
+				.select("pages", "isPublished")
+				.where("id=? or id=? or id=?", String.valueOf(ids[0]), String.valueOf(ids[1]),
+						String.valueOf(ids[2])).order("id").limit(2).offset(1).find(Book.class);
+		assertEquals(2, books.size());
+		assertTrue(books.get(0).getId() < books.get(1).getId());
+		for (int i = 0; i < 2; i++) {
+			Book b = books.get(i);
+			assertEquals(ids[i + 1], b.getId());
+			assertTrue(b.isSaved());
+			assertNull(b.getBookName());
+			assertEquals(5555, b.getPages());
+			assertEquals(true, b.isPublished());
+			assertEquals(0f, b.getArea());
+			assertEquals(0.0, b.getPrice());
+			assertEquals(0, b.getIsbn());
+			assertEquals(0, b.getLevel());
+		}
 	}
 
 }
