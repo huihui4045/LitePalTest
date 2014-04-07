@@ -58,7 +58,7 @@
     	cases of classes and fields. "upper" will turn all classes names
     	and fields names into uppercase. "lower" will act as default. 
     	Do not change the value after you run your app for the first time,
-    	or it might cause the exception that column can not be found.
+    	or it might cause the exception that columns can not be found.
     	value options: keep lower upper
     	For example:    
     	<cases value="keep" ></cases>

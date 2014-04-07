@@ -82,7 +82,7 @@ public class QueryBasicTest extends LitePalTestCase {
 	}
 
 	public void testFindAll() {
-		List<Book> expectBooks = getBooks();
+		List<Book> expectBooks = getBooks(null, null, null, null, null, null, null);
 		List<Book> realBooks = DataSupport.findAll(Book.class);
 		assertEquals(expectBooks.size(), realBooks.size());
 		for (int i = 0; i < expectBooks.size(); i++) {
@@ -101,7 +101,7 @@ public class QueryBasicTest extends LitePalTestCase {
 	}
 
 	public void testFindFirst() {
-		List<Book> expectedBooks = getBooks();
+		List<Book> expectedBooks = getBooks(null, null, null, null, null, null, null);
 		Book expectedFirstBook = expectedBooks.get(0);
 		Book realFirstBook = DataSupport.findFirst(Book.class);
 		assertEquals(expectedFirstBook.getId(), realFirstBook.getId());
@@ -116,7 +116,7 @@ public class QueryBasicTest extends LitePalTestCase {
 	}
 
 	public void testFindLast() {
-		List<Book> expectedBooks = getBooks();
+		List<Book> expectedBooks = getBooks(null, null, null, null, null, null, null);
 		Book expectedLastBook = expectedBooks.get(expectedBooks.size() - 1);
 		Book realLastBook = DataSupport.findLast(Book.class);
 		assertEquals(expectedLastBook.getId(), realLastBook.getId());

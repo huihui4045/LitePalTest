@@ -10,8 +10,8 @@ import com.litepaltest.test.LitePalTestCase;
 public class QueryClusterTest extends LitePalTestCase {
 
 	public void testSelect() {
-		List<Book> expectedBooks = getBooks();
-		List<Book> books = DataSupport.select("bookname", "price").execute(Book.class);
+		List<Book> expectedBooks = getBooks(null, null, null, null, null, null, null);
+		List<Book> books = DataSupport.select("bookname", "price").find(Book.class);
 		assertEquals(expectedBooks.size(), books.size());
 		for (int i = 0; i < books.size(); i++) {
 			Book book = books.get(i);
@@ -28,8 +28,7 @@ public class QueryClusterTest extends LitePalTestCase {
 	}
 
 	public void testWhere() {
-		List<Book> books = DataSupport.where("bookname = ?", "Android First Line").execute(
-				Book.class);
+		List<Book> books = DataSupport.where("bookname = ?", "Android First Line").find(Book.class);
 		for (Book book : books) {
 			assertTrue(book.isSaved());
 			assertEquals("Android First Line", book.getBookName());
@@ -39,14 +38,15 @@ public class QueryClusterTest extends LitePalTestCase {
 			assertEquals('A', book.getLevel());
 			assertEquals(10.5f, book.getArea());
 		}
-		List<Book> expectedBooks = getBooks();
-		List<Book> realBooks = DataSupport.where("bookname like ?", "Android%Line").execute(
-				Book.class);
+		List<Book> expectedBooks = getBooks(null, "bookname like ?",
+				new String[] { "Android%Line" }, null, null, null, null);
+		List<Book> realBooks = DataSupport.where("bookname like ?", "Android%Line")
+				.find(Book.class);
 		assertEquals(expectedBooks.size(), realBooks.size());
 	}
 
 	public void testOrder() {
-		List<Book> books = DataSupport.order("ID").execute(Book.class);
+		List<Book> books = DataSupport.order("ID").find(Book.class);
 		Book lastBook = null;
 		for (int i = 0; i < books.size(); i++) {
 			Book book = books.get(i);
@@ -56,7 +56,7 @@ public class QueryClusterTest extends LitePalTestCase {
 			}
 			lastBook = book;
 		}
-		List<Book> inverseBooks = DataSupport.order("ID desc").execute(Book.class);
+		List<Book> inverseBooks = DataSupport.order("ID desc").find(Book.class);
 		Book inverselastBook = null;
 		for (int i = 0; i < inverseBooks.size(); i++) {
 			Book book = inverseBooks.get(i);
@@ -69,7 +69,7 @@ public class QueryClusterTest extends LitePalTestCase {
 	}
 
 	public void testLimit() {
-		List<Book> bookList = DataSupport.limit(1).execute(Book.class);
+		List<Book> bookList = DataSupport.limit(1).find(Book.class);
 		assertEquals(1, bookList.size());
 		Book book = bookList.get(0);
 		assertTrue(book.isSaved());
@@ -83,7 +83,7 @@ public class QueryClusterTest extends LitePalTestCase {
 		assertEquals(firstBook.getIsbn(), book.getIsbn());
 		assertEquals(firstBook.getLevel(), book.getLevel());
 		assertEquals(firstBook.getId(), book.getId());
-		bookList = DataSupport.order("id desc").limit(1).execute(Book.class);
+		bookList = DataSupport.order("id desc").limit(1).find(Book.class);
 		assertEquals(1, bookList.size());
 		book = bookList.get(0);
 		assertTrue(book.isSaved());
@@ -99,10 +99,28 @@ public class QueryClusterTest extends LitePalTestCase {
 		assertEquals(lastBook.getId(), book.getId());
 	}
 
+	public void testOffset() {
+		List<Book> list = DataSupport.offset(1).find(Book.class);
+		assertEquals(0, list.size());
+		List<Book> bookList = DataSupport.limit(1).offset(1).find(Book.class);
+		assertEquals(1, bookList.size());
+		Book book = bookList.get(0);
+		assertTrue(book.isSaved());
+		List<Book> expectedBooks = getBooks(null, null, null, null, null, null, null);
+		Book expectedBook = expectedBooks.get(1);
+		assertEquals(expectedBook.getBookName(), book.getBookName());
+		assertEquals(expectedBook.getPages(), book.getPages());
+		assertEquals(expectedBook.isPublished(), book.isPublished());
+		assertEquals(expectedBook.getArea(), book.getArea());
+		assertEquals(expectedBook.getPrice(), book.getPrice());
+		assertEquals(expectedBook.getIsbn(), book.getIsbn());
+		assertEquals(expectedBook.getLevel(), book.getLevel());
+		assertEquals(expectedBook.getId(), book.getId());
+	}
+
 	public void testCluster() {
 		List<Book> books = DataSupport.select("pages", "isPublished").where("price = ?", "40.99")
-				.order("id desc").limit(2).execute(Book.class);
-		assertEquals(2, books.size());
+				.order("id desc").limit(2).find(Book.class);
 		for (Book book : books) {
 			assertTrue(book.isSaved());
 			assertNull(book.getBookName());

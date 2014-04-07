@@ -116,9 +116,11 @@ public class LitePalTestCase extends AndroidTestCase {
 		return count;
 	}
 
-	protected List<Book> getBooks() {
+	protected List<Book> getBooks(String[] columns, String selection, String[] selectionArgs,
+			String groupBy, String having, String orderBy, String limit) {
 		List<Book> books = new ArrayList<Book>();
-		Cursor cursor = Connector.getDatabase().query("Book", null, null, null, null, null, null);
+		Cursor cursor = Connector.getDatabase().query("Book", columns, selection, selectionArgs,
+				groupBy, having, orderBy, limit);
 		if (cursor.moveToFirst()) {
 			do {
 				long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
