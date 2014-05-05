@@ -116,17 +116,5 @@ public class SaveAllTest extends AndroidTestCase {
 			cursor.close();
 		}
 	}
-	
-	public void testSaveAllWithWrongType() {
-		List<String> list = new ArrayList<String>();
-		list.add("A");
-		list.add("B");
-		list.add("C");
-		try {
-			DataSupport.saveAll(list);
-			fail();
-		} catch (Exception e) {
-		}
-	}
 
 }
