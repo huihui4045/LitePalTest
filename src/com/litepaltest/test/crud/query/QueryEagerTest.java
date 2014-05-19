@@ -1,13 +1,15 @@
 package com.litepaltest.test.crud.query;
 
+import java.util.List;
+
 import org.litepal.crud.DataSupport;
+
+import android.test.AndroidTestCase;
 
 import com.litepaltest.model.Classroom;
 import com.litepaltest.model.IdCard;
 import com.litepaltest.model.Student;
 import com.litepaltest.model.Teacher;
-
-import android.test.AndroidTestCase;
 
 public class QueryEagerTest extends AndroidTestCase {
 
@@ -18,6 +20,8 @@ public class QueryEagerTest extends AndroidTestCase {
 	private Student student2;
 
 	private Teacher teacher1;
+
+	private Teacher teacher2;
 
 	private IdCard idcard1;
 
@@ -41,28 +45,83 @@ public class QueryEagerTest extends AndroidTestCase {
 		student2.setClassroom(classroom);
 		teacher1 = new Teacher();
 		teacher1.setTeacherName("Teacher 1");
+		teacher1.setTeachYears(3);
 		teacher1.setIdCard(idcard2);
+		teacher2 = new Teacher();
+		teacher2.setSex(false);
+		teacher2.setTeacherName("Teacher 2");
+		student1.getTeachers().add(teacher1);
+		student1.getTeachers().add(teacher2);
+		student2.getTeachers().add(teacher2);
+		classroom.getTeachers().add(teacher1);
 		classroom.save();
 		student1.save();
 		student2.save();
 		idcard1.save();
 		idcard2.save();
 		teacher1.save();
+		teacher2.save();
 	}
 
-	public void testFind() {
-//		Student s1 = DataSupport.find(Student.class, student1.getId(), true);
-//		Classroom c = s1.getClassroom();
-//		IdCard ic1 = s1.getIdcard();
-//		assertNotNull(c);
-//		assertNotNull(ic1);
-//		assertEquals(classroom.get_id(), c.get_id());
-//		assertEquals("Classroom 11", c.getName());
-//		assertEquals(idcard1.getId(), ic1.getId());
-//		assertEquals("320322", ic1.getNumber());
-//		s1 = DataSupport.find(Student.class, student1.getId());
-//		c = s1.getClassroom();
-//		assertNull(c);
+	public void testEagerFind() {
+		Student s1 = DataSupport.find(Student.class, student1.getId(), true);
+		Classroom c = s1.getClassroom();
+		IdCard ic = s1.getIdcard();
+		List<Teacher> tList = s1.getTeachers();
+		assertNotNull(c);
+		assertNotNull(ic);
+		assertEquals(classroom.get_id(), c.get_id());
+		assertEquals("Classroom 11", c.getName());
+		assertEquals(idcard1.getId(), ic.getId());
+		assertEquals("320311", ic.getNumber());
+		assertEquals(student1.getTeachers().size(), tList.size());
+		for (Teacher t : tList) {
+			if (t.getId() == teacher1.getId()) {
+				assertEquals("Teacher 1", t.getTeacherName());
+				assertEquals(teacher1.getTeachYears(), t.getTeachYears());
+				assertTrue(t.isSex());
+				continue;
+			}
+			if (t.getId() == teacher2.getId()) {
+				assertEquals("Teacher 2", t.getTeacherName());
+				assertFalse(t.isSex());
+				continue;
+			}
+			fail();
+		}
+		s1 = DataSupport.find(Student.class, student1.getId());
+		c = s1.getClassroom();
+		assertNull(c);
+		assertNull(s1.getIdcard());
+		assertEquals(0, s1.getTeachers().size());
+		c = DataSupport.find(Classroom.class, classroom.get_id(), true);
+		assertEquals(2, c.getStudentCollection().size());
+		assertEquals(1, c.getTeachers().size());
+		for (Student s : c.getStudentCollection()) {
+			if (s.getId() == student1.getId()) {
+				assertEquals("Student 1", s.getName());
+				continue;
+			}
+			if (s.getId() == student2.getId()) {
+				assertEquals("Student 2", s.getName());
+				continue;
+			}
+			fail();
+		}
+		Teacher t1 = DataSupport.find(Teacher.class, teacher2.getId(), true);
+		List<Student> sList = t1.getStudents();
+		assertEquals(teacher2.getStudents().size(), sList.size());
+		for (Student s : sList) {
+			if (s.getId() == student1.getId()) {
+				assertEquals("Student 1", s.getName());
+				continue;
+			}
+			if (s.getId() == student2.getId()) {
+				assertEquals("Student 2", s.getName());
+				continue;
+			}
+			fail();
+		}
 	}
 
 }
