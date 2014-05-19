@@ -101,9 +101,18 @@ public class SaveAllTest extends AndroidTestCase {
 			Student student = new Student();
 			student.setName("Timmy");
 			student.setAge(new Random().nextInt(20));
-			student.getTeachers().add(teacherList.get(new Random().nextInt(50)));
-			student.getTeachers().add(teacherList.get(new Random().nextInt(50)));
-			student.getTeachers().add(teacherList.get(new Random().nextInt(50)));
+			int index1 = new Random().nextInt(50);
+			student.getTeachers().add(teacherList.get(index1));
+			int index2 = index1;
+			while (index2 == index1) {
+				index2 = new Random().nextInt(50);
+			}
+			student.getTeachers().add(teacherList.get(index2));
+			int index3 = index2;
+			while (index3 == index2) {
+				index3 = new Random().nextInt(50);
+			}
+			student.getTeachers().add(teacherList.get(index3));
 			studentList.add(student);
 		}
 		DataSupport.saveAll(studentList);
