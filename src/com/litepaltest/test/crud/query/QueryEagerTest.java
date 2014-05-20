@@ -124,4 +124,18 @@ public class QueryEagerTest extends AndroidTestCase {
 		}
 	}
 
+	public void testEagerFindFirst() {
+		Student s1 = DataSupport.findFirst(Student.class);
+		assertNull(s1.getClassroom());
+		s1 = DataSupport.findFirst(Student.class, true);
+		assertNotNull(s1);
+	}
+
+	public void testEagerFindLast() {
+		Teacher t1 = DataSupport.findLast(Teacher.class);
+		assertEquals(0, t1.getStudents().size());
+		t1 = DataSupport.findLast(Teacher.class, true);
+		assertTrue(0 < t1.getStudents().size());
+	}
+
 }
