@@ -109,7 +109,7 @@ public class SaveAllTest extends AndroidTestCase {
 			}
 			student.getTeachers().add(teacherList.get(index2));
 			int index3 = index2;
-			while (index3 == index2) {
+			while (index3 == index2 || index3 == index1) {
 				index3 = new Random().nextInt(50);
 			}
 			student.getTeachers().add(teacherList.get(index3));
