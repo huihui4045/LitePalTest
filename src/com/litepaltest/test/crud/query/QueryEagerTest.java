@@ -28,8 +28,7 @@ public class QueryEagerTest extends AndroidTestCase {
 	private IdCard idcard2;
 
 	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	protected void setUp() {
 		classroom = new Classroom();
 		classroom.setName("Classroom 11");
 		idcard1 = new IdCard();
@@ -124,7 +123,16 @@ public class QueryEagerTest extends AndroidTestCase {
 		}
 	}
 
+	public void resetData() {
+		DataSupport.deleteAll(Student.class);
+		DataSupport.deleteAll(Classroom.class);
+		DataSupport.deleteAll(Teacher.class);
+		DataSupport.deleteAll(IdCard.class);
+		setUp();
+	}
+
 	public void testEagerFindFirst() {
+		resetData();
 		Student s1 = DataSupport.findFirst(Student.class);
 		assertNull(s1.getClassroom());
 		s1 = DataSupport.findFirst(Student.class, true);
@@ -132,10 +140,41 @@ public class QueryEagerTest extends AndroidTestCase {
 	}
 
 	public void testEagerFindLast() {
+		resetData();
 		Teacher t1 = DataSupport.findLast(Teacher.class);
 		assertEquals(0, t1.getStudents().size());
 		t1 = DataSupport.findLast(Teacher.class, true);
 		assertTrue(0 < t1.getStudents().size());
+	}
+
+	public void testEagerFindAll() {
+		resetData();
+		List<Student> sList = DataSupport.findAll(Student.class);
+		for (Student s : sList) {
+			assertNull(s.getClassroom());
+			assertEquals(0, s.getTeachers().size());
+		}
+		sList = DataSupport.findAll(Student.class, true);
+		for (Student s : sList) {
+			assertNotNull(s.getClassroom());
+			assertEquals("Classroom 11", s.getClassroom().getName());
+			assertTrue(s.getTeachers().size() > 0);
+			List<Teacher> tList = s.getTeachers();
+			for (Teacher t : tList) {
+				if (t.getId() == teacher1.getId()) {
+					assertEquals("Teacher 1", t.getTeacherName());
+					assertEquals(teacher1.getTeachYears(), t.getTeachYears());
+					assertTrue(t.isSex());
+					continue;
+				}
+				if (t.getId() == teacher2.getId()) {
+					assertEquals("Teacher 2", t.getTeacherName());
+					assertFalse(t.isSex());
+					continue;
+				}
+				fail();
+			}
+		}
 	}
 
 }
