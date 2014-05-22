@@ -177,4 +177,20 @@ public class QueryEagerTest extends AndroidTestCase {
 		}
 	}
 
+	public void testEagerClusterQuery() {
+		resetData();
+		List<Student> sList = DataSupport.where("id = ?", String.valueOf(student1.getId())).find(
+				Student.class);
+		assertEquals(1, sList.size());
+		Student s = sList.get(0);
+		assertNull(s.getClassroom());
+		sList = DataSupport.where("id = ?", String.valueOf(student1.getId())).find(Student.class,
+				true);
+		assertEquals(1, sList.size());
+		s = sList.get(0);
+		assertNotNull(s.getClassroom());
+		Classroom c = s.getClassroom();
+		assertEquals("Classroom 11", c.getName());
+	}
+
 }
