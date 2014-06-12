@@ -1,8 +1,11 @@
 package com.litepaltest.test.crud.update;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.litepal.crud.DataSupport;
 
 import com.litepaltest.model.Cellphone;
 import com.litepaltest.model.Classroom;
@@ -30,6 +33,7 @@ public class UpdateUsingSaveMethodTest extends LitePalTestCase {
 	private Teacher t2;
 
 	private void init() {
+		Calendar calendar = Calendar.getInstance();
 		c1 = new Classroom();
 		c1.setName("Working room");
 		c2 = new Classroom();
@@ -39,6 +43,9 @@ public class UpdateUsingSaveMethodTest extends LitePalTestCase {
 		s1.setAge(18);
 		s2 = new Student();
 		s2.setName("Peter");
+		calendar.clear();
+		calendar.set(1990, 9, 16, 0, 0, 0);
+		s2.setBirthday(calendar.getTime());
 		s2.setAge(19);
 		s3 = new Student();
 		s3.setName("Miley");
@@ -82,10 +89,18 @@ public class UpdateUsingSaveMethodTest extends LitePalTestCase {
 		assertTrue(s2.save());
 		s1.setClassroom(c2);
 		s2.setClassroom(c2);
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(1989, 7, 7, 0, 0, 0);
+		s2.setBirthday(calendar.getTime());
 		assertTrue(s1.save());
 		assertTrue(s2.save());
 		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s1.getId()));
 		assertEquals(c2.get_id(), getForeignKeyValue("student", "classroom", s2.getId()));
+		Student student2 = DataSupport.find(Student.class, s2.getId());
+		calendar.clear();
+		calendar.set(1989, 7, 7, 0, 0, 0);
+		assertEquals(calendar.getTimeInMillis(), student2.getBirthday().getTime());
 	}
 
 	public void testUpdateM2OAssociationsOnOSide() {

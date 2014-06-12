@@ -1,5 +1,6 @@
 package com.litepaltest.test.crud.update;
 
+import java.util.Date;
 import java.util.List;
 
 import org.litepal.crud.DataSupport;
@@ -55,6 +56,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		student.setName("Jonny");
 		student.setAge(13);
 		student.setClassroom(classroom);
+		student.setBirthday(new Date());
 		student.getTeachers().add(teacher);
 		teacher.getStudents().add(student);
 		student.save();
@@ -166,9 +168,11 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		Student s = new Student();
 		s.setToDefault("age");
 		s.setToDefault("name");
+		s.setToDefault("birthday");
 		int affectedStudent = s.update(student.getId());
 		assertEquals(1, affectedStudent);
-		Student newStudent = getStudent(student.getId());
+		Student newStudent = DataSupport.find(Student.class, student.getId());
+		assertNull(newStudent.getBirthday());
 		assertEquals(null, newStudent.getName());
 		assertEquals(0, newStudent.getAge());
 		Teacher t = new Teacher();
@@ -420,13 +424,16 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 			s.save();
 			ids[i] = s.getId();
 		}
+		Date date = new Date();
 		Student toUpdate = new Student();
 		toUpdate.setAge(24);
+		toUpdate.setBirthday(date);
 		int affectedRows = toUpdate.updateAll(new String[] { "name = ? and age = ?", "Jessica",
 				"13" });
 		assertEquals(1, affectedRows);
-		Student updatedStu = getStudent(ids[3]);
+		Student updatedStu = DataSupport.find(Student.class, ids[3]);
 		assertEquals(24, updatedStu.getAge());
+		assertEquals(date.getTime(), updatedStu.getBirthday().getTime());
 		toUpdate.setAge(18);
 		toUpdate.setName("Jess");
 		affectedRows = toUpdate.updateAll(new String[] { "name = ?", "Jessica" });
