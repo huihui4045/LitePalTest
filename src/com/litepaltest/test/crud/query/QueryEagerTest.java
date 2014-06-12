@@ -6,7 +6,6 @@ import java.util.List;
 import org.litepal.crud.DataSupport;
 
 import android.test.AndroidTestCase;
-import android.util.Log;
 
 import com.litepaltest.model.Classroom;
 import com.litepaltest.model.IdCard;
@@ -146,8 +145,7 @@ public class QueryEagerTest extends AndroidTestCase {
 			fail();
 		}
 		Student s3 = DataSupport.find(Student.class, student3.getId());
-		Log.d("TAG", "birthday is " + s3.getBirthday());
-		assertNotNull(s3.getBirthday());
+		assertNull(s3.getBirthday());
 	}
 
 	public void resetData() {
