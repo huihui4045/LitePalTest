@@ -536,7 +536,7 @@ public class UpdateUsingUpdateMethodTest extends LitePalTestCase {
 		try {
 			student.updateAll(new String[] { "address = ?", "HK" });
 			fail();
-		} catch (SQLiteException e) {
+		} catch (Exception e) {
 		}
 	}
 
