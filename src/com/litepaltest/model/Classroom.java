@@ -12,7 +12,7 @@ public class Classroom extends DataSupport {
 
 	private String name;
 
-	private Set<Student> studentCollection = new HashSet<Student>();;
+	private Set<Student> studentCollection = new HashSet<Student>();
 
 	private List<Teacher> teachers = new ArrayList<Teacher>();
 
