@@ -14,7 +14,7 @@ public class SaveTest extends LitePalTestCase {
 	public void testSave() {
 		Cellphone cell = new Cellphone();
 		cell.setBrand("iPhone");
-		cell.setPrice(4998.01f);
+		cell.setPrice(4998.01);
 		cell.setInStock('Y');
 		Assert.assertTrue(cell.save());
 		Assert.assertTrue(isDataExists(getTableName(cell), cell.getId()));
@@ -23,7 +23,7 @@ public class SaveTest extends LitePalTestCase {
 	public void testSaveAfterDelete() {
 		Cellphone cell = new Cellphone();
 		cell.setBrand("iPhone");
-		cell.setPrice(4998.01f);
+		cell.setPrice(4998.01);
 		cell.setInStock('Y');
 		Assert.assertTrue(cell.save());
 		Assert.assertTrue(isDataExists(getTableName(cell), cell.getId()));

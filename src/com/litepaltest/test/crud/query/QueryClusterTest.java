@@ -17,7 +17,7 @@ public class QueryClusterTest extends LitePalTestCase {
 			Book book = books.get(i);
 			assertTrue(book.isSaved());
 			assertEquals(expectedBooks.get(i).getBookName(), book.getBookName());
-			assertEquals(0, book.getPages());
+			assertNull(book.getPages());
 			assertEquals(false, book.isPublished());
 			assertEquals(0f, book.getArea());
 			assertEquals(expectedBooks.get(i).getPrice(), book.getPrice());
@@ -32,7 +32,7 @@ public class QueryClusterTest extends LitePalTestCase {
 		for (Book book : books) {
 			assertTrue(book.isSaved());
 			assertEquals("Android First Line", book.getBookName());
-			assertEquals(450, book.getPages());
+			assertTrue(450 == book.getPages());
 			assertEquals(49.99, book.getPrice());
 			assertEquals(false, book.isPublished());
 			assertEquals('A', book.getLevel());
@@ -139,7 +139,7 @@ public class QueryClusterTest extends LitePalTestCase {
 			assertEquals(ids[i + 1], b.getId());
 			assertTrue(b.isSaved());
 			assertNull(b.getBookName());
-			assertEquals(5555, b.getPages());
+			assertTrue(5555 == b.getPages());
 			assertEquals(true, b.isPublished());
 			assertEquals(0f, b.getArea());
 			assertEquals(0.0, b.getPrice());

@@ -4,72 +4,44 @@ import org.litepal.crud.DataSupport;
 
 public class Cellphone extends DataSupport {
 
-	private long id;
+	private Long id;
 
 	private String brand;
 
-	private char inStock;
+	private Character inStock;
 
-	private double price;
+	private Double price;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the brand
-	 */
 	public String getBrand() {
 		return brand;
 	}
 
-	/**
-	 * @param brand
-	 *            the brand to set
-	 */
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
 
-	/**
-	 * @return the price
-	 */
-	public double getPrice() {
-		return price;
-	}
-
-	/**
-	 * @param price
-	 *            the price to set
-	 */
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-	/**
-	 * @return the inStock
-	 */
-	public char getInStock() {
+	public Character getInStock() {
 		return inStock;
 	}
 
-	/**
-	 * @param inStock
-	 *            the inStock to set
-	 */
-	public void setInStock(char inStock) {
+	public void setInStock(Character inStock) {
 		this.inStock = inStock;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 }

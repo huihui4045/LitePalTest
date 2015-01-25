@@ -26,7 +26,7 @@ public class QueryBasicTest extends LitePalTestCase {
 		assertEquals("Android First Line", b.getBookName());
 		assertEquals(isbn, b.getIsbn());
 		assertEquals('A', b.getLevel());
-		assertEquals(450, b.getPages());
+		assertTrue(450 == b.getPages());
 		assertEquals(49.99, b.getPrice());
 		assertFalse(b.isPublished());
 		assertTrue(b.isSaved());
@@ -61,7 +61,7 @@ public class QueryBasicTest extends LitePalTestCase {
 				assertEquals("Android Second Line", book.getBookName());
 				assertEquals(isbn1, book.getIsbn());
 				assertEquals('B', book.getLevel());
-				assertEquals(434, book.getPages());
+				assertTrue(434 == book.getPages());
 				assertEquals(40.99, book.getPrice());
 				assertTrue(book.isPublished());
 				assertTrue(book.isSaved());
@@ -71,7 +71,7 @@ public class QueryBasicTest extends LitePalTestCase {
 				assertEquals("Android Third Line", book.getBookName());
 				assertEquals(isbn2, book.getIsbn());
 				assertEquals('C', book.getLevel());
-				assertEquals(411, book.getPages());
+				assertTrue(411 == book.getPages());
 				assertEquals(35.99, book.getPrice());
 				assertFalse(book.isPublished());
 				assertTrue(book.isSaved());

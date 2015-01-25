@@ -76,7 +76,7 @@ public class UpdateUsingSaveMethodTest extends LitePalTestCase {
 		assertTrue(cell.save());
 		Cellphone updatedCell = getCellPhone(cell.getId());
 		assertEquals(2899.88, updatedCell.getPrice());
-		assertEquals('N', updatedCell.getInStock());
+		assertTrue('N' == updatedCell.getInStock());
 	}
 
 	public void testUpdateM2OAssociationsOnMSide() {

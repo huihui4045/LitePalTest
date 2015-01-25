@@ -12,7 +12,7 @@ public class Book extends DataSupport implements Serializable{
 
 	private String bookName;
 
-	private int pages;
+	private Integer pages;
 
 	private double price;
 
@@ -40,11 +40,11 @@ public class Book extends DataSupport implements Serializable{
 		this.bookName = bookName;
 	}
 
-	public int getPages() {
+	public Integer getPages() {
 		return pages;
 	}
 
-	public void setPages(int pages) {
+	public void setPages(Integer pages) {
 		this.pages = pages;
 	}
 
