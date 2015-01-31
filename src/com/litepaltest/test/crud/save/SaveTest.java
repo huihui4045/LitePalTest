@@ -1,10 +1,15 @@
 package com.litepaltest.test.crud.save;
 
+import org.litepal.crud.DataSupport;
+
 import junit.framework.Assert;
+import android.util.Log;
 
 import com.litepaltest.model.Cellphone;
 import com.litepaltest.model.Classroom;
+import com.litepaltest.model.Computer;
 import com.litepaltest.model.IdCard;
+import com.litepaltest.model.Product;
 import com.litepaltest.model.Student;
 import com.litepaltest.model.Teacher;
 import com.litepaltest.test.LitePalTestCase;
@@ -18,6 +23,23 @@ public class SaveTest extends LitePalTestCase {
 		cell.setInStock('Y');
 		Assert.assertTrue(cell.save());
 		Assert.assertTrue(isDataExists(getTableName(cell), cell.getId()));
+	}
+	
+	public void testSaveWithConstructors() {
+		Computer computer = new Computer("asus", 699.00);
+		assertTrue(computer.save());
+		Assert.assertTrue(isDataExists(getTableName(computer), computer.getId()));
+		Computer c = getComputer(computer.getId());
+		assertEquals("asus", c.getBrand());
+		assertEquals(699.00, c.getPrice());
+		Computer cc = DataSupport.find(Computer.class, computer.getId());
+		assertEquals("asus", cc.getBrand());
+		assertEquals(699.00, cc.getPrice());
+		Product p = new Product(null);
+		p.setBrand("apple");
+		p.setPrice(1222.33);
+		p.save();
+		Product.find(Product.class, p.getId());
 	}
 	
 	public void testSaveAfterDelete() {
